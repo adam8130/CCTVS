@@ -182,7 +182,7 @@ const Map = (props) => {
             </div>
             { popupInfo === item.place_id && 
               <img 
-                src={item.photos[0].getUrl()} 
+                src={item?.photos[0]?.getUrl()} 
                 style={{width: '200px'}}
                 onClick={() => setPopupInfo(null)}
                 alt=''
@@ -192,8 +192,8 @@ const Map = (props) => {
         </InfoWindow>  
       )}
 
-      { zoomed <= 13 && rainningArr?.map((item, i) => 
-        <Rainning key={i} item={item}/> 
+      { rainningArr?.map((item, i) => 
+        <Rainning key={i} item={item} zoomed={zoomed}/> 
       )}
     </GoogleMap>
   )

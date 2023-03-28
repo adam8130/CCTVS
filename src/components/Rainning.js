@@ -1,40 +1,49 @@
 import React, { memo } from 'react'
-import { OverlayView } from '@react-google-maps/api'
+import { InfoBox } from '@react-google-maps/api'
 import { styled } from '@mui/material'
 
 
 const Rainning = (props) => {
 
     const { lat, lon, locationName, weather } = props.item
+    const zoomed = props.zoomed
+    
+    const option = { 
+        closeBoxURL: '', 
+        disableAutoPan: true,
+        boxStyle: { overflow: 'unset' }
+    }
+
     console.log(weather)
 
     return (
-        <OverlayView 
+        <InfoBox 
             position={{lat: lat, lng: lon}}
-            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-            getPixelPositionOffset={(width, height) => ({ x: -(width / 2), y: -(height / 2) })}
+            options={option}
         >
-            <RootBox>       
+            <RootBox zoomed={zoomed}>       
                 <p>{locationName}</p> 
-                {/* <div className='rain'>
-                    <span style={{'--i':10}}></span>
-                    <span style={{'--i':12}}></span>
-                    <span style={{'--i':16}}></span>
-                    <span style={{'--i':19}}></span>
-                    <span style={{'--i':10}}></span>
-                    <span style={{'--i':17}}></span>
-                    <span style={{'--i':11}}></span>
-                    <span style={{'--i':20}}></span>
-                    <span style={{'--i':10}}></span>
-                    <span style={{'--i':13}}></span>
-                </div> */}
+                { zoomed > 14 &&
+                    <div className='rain'>
+                        <span style={{'--i':10}}></span>
+                        <span style={{'--i':12}}></span>
+                        <span style={{'--i':16}}></span>
+                        <span style={{'--i':19}}></span>
+                        <span style={{'--i':10}}></span>
+                        <span style={{'--i':17}}></span>
+                        <span style={{'--i':11}}></span>
+                        <span style={{'--i':20}}></span>
+                        <span style={{'--i':10}}></span>
+                        <span style={{'--i':13}}></span>
+                    </div>
+                }
             </RootBox>
-        </OverlayView>
+        </InfoBox>
     )
 }
 
-const RootBox = styled('div')`
-    width: 50px;
+const RootBox = styled('div')(({ zoomed }) => `
+    width:  50px;
     height: 22px;
     background: gray;
     position: relative;
@@ -42,6 +51,7 @@ const RootBox = styled('div')`
     display: flex;
     justify-content: center;
     opacity: 0.8;
+    transform: ${zoomed > 14 && 'scale(2)'};
         &::before {
             content: '';
             position: absolute;
@@ -69,7 +79,7 @@ const RootBox = styled('div')`
             }
             p {
                 position: absolute;
-                top: -5px;
+                top: -10px;
                 color: rgba(220,220,220,0.9);
             }
         }
@@ -84,6 +94,6 @@ const RootBox = styled('div')`
                 transform: translateY(30px);
             }
         }
-`
+`)
 
 export default memo(Rainning)

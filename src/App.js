@@ -8,7 +8,6 @@ import Menubar from "./components/Menubar.js"
 import Fabs from "./components/Fabs.js"
 import { useStore } from "./store/store.js"
 import MediaCam from "./components/MediaCam.js"
-import Vconsole from 'vconsole'
 import MobFabs from "./components/MobFabs.js"
 
 
@@ -34,7 +33,6 @@ const App = () => {
   }, [setServerURL])
 
   useEffect(() => {
-    isMobile && new Vconsole()
     setIsMobile(isMobile)
   }, [isMobile, setIsMobile])
 

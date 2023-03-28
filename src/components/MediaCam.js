@@ -122,11 +122,11 @@ export default observer(MediaCam)
 const RootBox = styled('div')(({ismobile, media, islandscape}) => `
   z-index: 90;
   position: absolute;
-  width: ${ismobile? '350px' : '500px'};
-  height: ${ismobile? '250px' : '350px'};
-  top: ${ismobile? '50%' : '3%'};
-  left: ${ismobile? '3%' : '5%'};
-  ${islandscape && 'top: 25%; left: 5%'};
+  width: ${ismobile? '250px' : '500px'};
+  height: ${ismobile? '150px' : '350px'};
+  top: ${ismobile? '25%' : '3%'};
+  left: ${ismobile? '5%' : '5%'};
+  ${islandscape && 'top: 10%; left: 5%'};
     .CCTV-Box {
       position: relative;
       width: 100%;
