@@ -126,7 +126,7 @@ const RootBox = styled('div')(({ismobile, media, islandscape}) => `
   height: ${ismobile? '150px' : '350px'};
   top: ${ismobile? '25%' : '3%'};
   left: ${ismobile? '5%' : '5%'};
-  ${islandscape && 'top: 10%; left: 5%'};
+  ${islandscape && 'top: 5%; left: 5%'};
     .CCTV-Box {
       position: relative;
       width: 100%;

@@ -59,6 +59,7 @@ class Store {
   setServerURL = act => this.serverURL = act
   setIsPopup = act => this.isPopup = act
   setCameraURL  = act => {
+    fetch(`${this.serverURL}/close`)
     if (act === null) {
       this.videoRef && ( this.videoRef.current.src = null )
       this.cameraURL = act

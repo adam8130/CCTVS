@@ -51,7 +51,7 @@ const RootBox = styled('div')(({ zoomed }) => `
     display: flex;
     justify-content: center;
     opacity: 0.8;
-    transform: ${zoomed > 14 && 'scale(2)'};
+    transform: ${zoomed > 13 && 'scale(2)'};
         &::before {
             content: '';
             position: absolute;
