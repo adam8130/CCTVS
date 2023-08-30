@@ -97,8 +97,9 @@ const MediaCam = ({ type }) => {
         { type === 'iframe' &&
             <iframe 
               title='iframeCam'
-              style={{'pointerEvents': 'none'}}
-              onLoad={() => setIsLoading(false)} 
+              style={{ pointerEvents: 'none' }}
+              onLoad={() => setIsLoading(false)}
+              scrolling="no"
               {...options} 
             /> 
         }

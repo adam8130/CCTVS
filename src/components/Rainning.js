@@ -7,40 +7,40 @@ import { observer } from 'mobx-react-lite'
 
 const Rainning = ({ lat, lon, locationName, weather }) => {
 
-    const { currentMapZoomedLevel } = useStore()
-    
-    const option = { 
-        closeBoxURL: '', 
-        disableAutoPan: true,
-        boxStyle: { overflow: 'unset' }
-    }
+  const { currentMapZoomedLevel } = useStore()
 
-    console.log(weather)
+  const option = {
+    closeBoxURL: '',
+    disableAutoPan: true,
+    boxStyle: { overflow: 'unset' }
+  }
 
-    return (
-        <InfoBox 
-            position={{lat: lat, lng: lon}}
-            options={option}
-        >
-            <RootBox zoomed={currentMapZoomedLevel}>       
-                <p>{locationName}</p> 
-                { currentMapZoomedLevel > 14 &&
-                    <div className='rain'>
-                        <span style={{'--i':10}}></span>
-                        <span style={{'--i':12}}></span>
-                        <span style={{'--i':16}}></span>
-                        <span style={{'--i':19}}></span>
-                        <span style={{'--i':10}}></span>
-                        <span style={{'--i':17}}></span>
-                        <span style={{'--i':11}}></span>
-                        <span style={{'--i':20}}></span>
-                        <span style={{'--i':10}}></span>
-                        <span style={{'--i':13}}></span>
-                    </div>
-                }
-            </RootBox>
-        </InfoBox>
-    )
+  console.log(weather)
+
+  return (
+    <InfoBox
+      position={{ lat: lat, lng: lon }}
+      options={option}
+    >
+      <RootBox zoomed={currentMapZoomedLevel}>
+        <p>{locationName}</p>
+        {currentMapZoomedLevel > 14 &&
+          <div className='rain'>
+            <span style={{ '--i': 10 }}></span>
+            <span style={{ '--i': 12 }}></span>
+            <span style={{ '--i': 16 }}></span>
+            <span style={{ '--i': 19 }}></span>
+            <span style={{ '--i': 10 }}></span>
+            <span style={{ '--i': 17 }}></span>
+            <span style={{ '--i': 11 }}></span>
+            <span style={{ '--i': 20 }}></span>
+            <span style={{ '--i': 10 }}></span>
+            <span style={{ '--i': 13 }}></span>
+          </div>
+        }
+      </RootBox>
+    </InfoBox>
+  )
 }
 
 const RootBox = styled('div')(({ zoomed }) => `
