@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/CCTVS/static/js/main.f4d3989e.js",
+    "main.js": "/CCTVS/static/js/main.b149c144.js",
     "index.html": "/CCTVS/index.html",
-    "main.f4d3989e.js.map": "/CCTVS/static/js/main.f4d3989e.js.map"
+    "main.b149c144.js.map": "/CCTVS/static/js/main.b149c144.js.map"
   },
   "entrypoints": [
-    "static/js/main.f4d3989e.js"
+    "static/js/main.b149c144.js"
   ]
 }
