@@ -7,23 +7,7 @@ class Store {
     makeAutoObservable(this)
   }
 
-  cameraURL = null
-  cameraDesc = null
-  cityName = null
-  mode = true
-  isMobile = false
-  token = null
-  selected = null
-  map = null
-  videoRef = null
-  menu = false
-  zoomed = null
-  isMapDragging = false
-  bounds = null
-  searchData = null
-  serverURL = null
-  isPopup = false
-  cities = [
+  availableCities = [
     { name: '台北', city: 'Taipei' },
     { name: '新北', city: 'NewTaipei' },
     { name: '基隆', city: 'Keelung' },
@@ -43,35 +27,64 @@ class Store {
     { name: '台東', city: 'TaitungCounty' },
     { name: '屏東', city: 'PingtungCounty' },
   ]
+  
+  // Api & Data
+  apiToken = null
+  serverURL = null
+  searchData = null
+  selectedCCTVID = null
+  selectedCityName = null
 
-  setMap = act => this.map = act
-  setToken = act => this.token = act
-  setMode = act => this.mode = act
-  setIsMobile = act => this.isMobile = act
-  setMenu = act => this.menu = act
-  setSelected = act => this.selected = act
-  setVideoRef = act => this.videoRef = act
-  setCameraDesc = act => this.cameraDesc = act
-  setZoomed = act => this.zoomed = act
-  setIsMapDragging = act => this.isMapDragging = act
-  setBounds = act => this.bounds = act
-  setSearchData = act => this.searchData = act
+  setApiToken = act => this.apiToken = act
   setServerURL = act => this.serverURL = act
-  setIsPopup = act => this.isPopup = act
-  setCameraURL  = act => {
+  setSearchData = act => this.searchData = act
+  setSelectedCCTVID = act => this.selectedCCTVID = act
+  setSelectedCityName = act => {
+    this.videoRef && ( this.videoRef.current.src = null )
+    this.selectedCityName = act
+    this.videoURL = null
+    this.selectedCCTVID = null
+  }
+  
+  // System
+  isMobile = false
+  themeMode = true
+  fabsMenuVisible = false
+  searchbarVisible = false
+  mobileFabsVisible = true
+
+  setIsMobile = act => this.isMobile = act
+  setThemeMode = act => this.themeMode = act
+  setFabsMenuVisible = act => this.fabsMenuVisible = act
+  setSearchbarVisible = act => this.searchbarVisible = act
+  setMobileFabsVisible = act => this.mobileFabsVisible = act
+
+  // map
+  map = null
+  isMapDragging = false
+  currentMapBounds = null
+  currentMapZoomedLevel = null
+  
+  setMap = act => this.map = act
+  setIsMapDragging = act => this.isMapDragging = act
+  setCurrentMapBounds = act => this.currentMapBounds = act
+  setCurrentMapZoomedLevel = act => this.currentMapZoomedLevel = act
+
+  // MediaVideo
+  videoRef = null
+  videoName = null
+  videoURL = null
+
+  setVideoRef = act => this.videoRef = act
+  setVideoName = act => this.videoName = act
+  setVideoURL  = act => {
     fetch(`${this.serverURL}/close`)
     if (act === null) {
       this.videoRef && ( this.videoRef.current.src = null )
-      this.cameraURL = act
+      this.videoURL = act
       console.log('connection down')
     } 
-    this.cameraURL = act
-  }
-  setCityName = act => {
-    this.videoRef && ( this.videoRef.current.src = null )
-    this.cityName = act
-    this.cameraURL = null
-    this.selected = null
+    this.videoURL = act
   }
 
 }

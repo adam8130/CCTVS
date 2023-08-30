@@ -8,7 +8,7 @@ import Menubar from "./components/Menubar.js"
 import Fabs from "./components/Fabs.js"
 import { useStore } from "./store/store.js"
 import MediaCam from "./components/MediaCam.js"
-import MobFabs from "./components/MobFabs.js"
+import MobileFabs from "./components/MobileFabs.js"
 
 
 const libraries = ['places']
@@ -16,12 +16,12 @@ const libraries = ['places']
 const App = () => {
   
   const [ type, setType ] = useState(null)
-  const { cameraURL, mode, cityName, setIsMobile, setServerURL } = useStore()
+  const { videoURL, themeMode, selectedCityName, setIsMobile, setServerURL } = useStore()
 
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const isLandscape = useMediaQuery('(orientation: landscape)')
-  const themeMode = createTheme(mode? light : dark)
+  const currentTheme = createTheme(themeMode? light : dark)
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_MAP_KEY,
@@ -37,32 +37,32 @@ const App = () => {
   }, [isMobile, setIsMobile])
 
   useEffect(() => {
-    if (!cameraURL) return
+    if (!videoURL) return
 
-    if (cameraURL.includes('thb.gov')) {
+    if (videoURL.includes('thb.gov')) {
       setType('img')
     }
-    else if (['Taipei', 'PingtungCounty', 'YunlinCounty'].includes(cityName)) {
+    else if (['Taipei', 'PingtungCounty', 'YunlinCounty'].includes(selectedCityName)) {
       setType('iframe')
     }
-    else if (['YilanCounty'].includes(cityName)) {
+    else if (['YilanCounty'].includes(selectedCityName)) {
       setType('video')
     }
     else {
       setType('img')
     }
-  }, [cityName, cameraURL])
+  }, [selectedCityName, videoURL])
 
-  console.log(cameraURL)
-  console.log(cityName)
+  console.log(videoURL)
+  console.log(selectedCityName)
   
   return (
-    <ThemeProvider theme={themeMode}>
+    <ThemeProvider theme={currentTheme}>
       <RootBox ismobile={Number(isMobile)} islandscape={Number(isLandscape)}>
         { isLoaded && <Map/> }
-        { cameraURL && <MediaCam type={type}/> }
+        { videoURL && <MediaCam type={type}/> }
         { isLoaded && <Menubar/> }
-        { isMobile && !isLandscape? <MobFabs/> : <Fabs/> }
+        { isMobile && !isLandscape? <MobileFabs/> : <Fabs/> }
       </RootBox>
     </ThemeProvider>
   )

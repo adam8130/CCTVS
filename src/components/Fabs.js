@@ -6,31 +6,31 @@ import { useStore } from '../store/store'
 
 const Fabs = () => {
 
-  const { cities, menu, isMobile, setCityName, setMenu, setSearchData } = useStore()
+  const { availableCities, fabsMenuVisible, isMobile, setSelectedCityName, setFabsMenuVisible, setSearchData } = useStore()
   const isLandscape = useMediaQuery('(orientation: landscape)')
   const theme = useTheme()
   
   return (
     <RootBox>
       <MenuBox 
-        onClick={() => setMenu(!menu)}
-        menu={Number(menu)}
+        onClick={() => setFabsMenuVisible(!fabsMenuVisible)}
+        menu={Number(fabsMenuVisible)}
       >
         DropMenu
       </MenuBox>
 
-      { menu && <FabGroup ismobile={Number(isMobile)} islandscape={Number(isLandscape)}>
+      { fabsMenuVisible && <FabGroup ismobile={Number(isMobile)} islandscape={Number(isLandscape)}>
         { 
-          cities.map((item, i) => (
+          availableCities.map((item, i) => (
             <Fab
               key={i} 
               variant='extended' 
               size='small'
               sx={{background: theme.palette.menubar.main, color: theme.palette.menubar.font}}
               onClick={() => {
-                setCityName(item.city)
+                setSelectedCityName(item.city)
                 setSearchData(null)
-                setMenu(false)
+                setFabsMenuVisible(false)
               }}
             >
               { item.name }
@@ -55,7 +55,7 @@ const RootBox = styled('div')`
   justify-content: center;
 `
 
-const MenuBox = styled('div')(({menu, theme}) => `
+const MenuBox = styled('div')(({fabsMenuVisible, theme}) => `
   width: 200px;
   height: 35px;
   border-radius: 25px;
@@ -67,7 +67,7 @@ const MenuBox = styled('div')(({menu, theme}) => `
   cursor: pointer;
   font-weight: 700;
   background: ${theme.palette.menubar.main};
-  color: ${menu? 'rgb(30,155,255)' : theme.palette.menubar.font};
+  color: ${fabsMenuVisible? 'rgb(30,155,255)' : theme.palette.menubar.font};
 `)
 
 const FabGroup = styled('div')(({ismobile, islandscape}) => `

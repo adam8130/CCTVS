@@ -1,12 +1,13 @@
-import React, { memo } from 'react'
+import React from 'react'
 import { InfoBox } from '@react-google-maps/api'
 import { styled } from '@mui/material'
+import { useStore } from '../store/store'
+import { observer } from 'mobx-react-lite'
 
 
-const Rainning = (props) => {
+const Rainning = ({ lat, lon, locationName, weather }) => {
 
-    const { lat, lon, locationName, weather } = props.item
-    const zoomed = props.zoomed
+    const { currentMapZoomedLevel } = useStore()
     
     const option = { 
         closeBoxURL: '', 
@@ -21,9 +22,9 @@ const Rainning = (props) => {
             position={{lat: lat, lng: lon}}
             options={option}
         >
-            <RootBox zoomed={zoomed}>       
+            <RootBox zoomed={currentMapZoomedLevel}>       
                 <p>{locationName}</p> 
-                { zoomed > 14 &&
+                { currentMapZoomedLevel > 14 &&
                     <div className='rain'>
                         <span style={{'--i':10}}></span>
                         <span style={{'--i':12}}></span>
@@ -96,4 +97,4 @@ const RootBox = styled('div')(({ zoomed }) => `
         }
 `)
 
-export default memo(Rainning)
+export default observer(Rainning)

@@ -10,7 +10,7 @@ import { LocationOn } from '@mui/icons-material'
 const AutoComplete = () => {
 
   console.log('auto')
-  const { cities, bounds, map, isPopup, setSearchData, setIsPopup, setCityName } = useStore()
+  const { availableCities, currentMapBounds, map, searchbarVisible, setSearchData, setSearchbarVisible, setSelectedCityName } = useStore()
   const [ dataArr, setDataArr ] = useState(null)
   const [ sessionToken, setSessionToken ] = useState(null)
   const [ service, setService ] = useState(null)
@@ -28,7 +28,7 @@ const AutoComplete = () => {
       if (value) {
         let queryOption = {
             input: value,
-            bounds: bounds,
+            bounds: currentMapBounds,
             sessionToken 
         }
         service.getQueryPredictions(queryOption, (prediction) => {
@@ -50,7 +50,7 @@ const AutoComplete = () => {
     placesService.textSearch(request, (results) => {
 
         const viewport = new window.google.maps.LatLngBounds()
-        const formattedCity = cities.find((item) => results[0].formatted_address.includes(item.name))
+        const formattedCity = availableCities.find((item) => results[0].formatted_address.includes(item.name))
 
         results?.forEach( place => {
           if (place.geometry.viewport) {
@@ -62,10 +62,10 @@ const AutoComplete = () => {
           delete item.permanently_closed
         })
 
-        setCityName(formattedCity && formattedCity.city)
+        setSelectedCityName(formattedCity && formattedCity.city)
         setDataArr(null)
         setSearchData(results)
-        setIsPopup(!isPopup)
+        setSearchbarVisible(!searchbarVisible)
         map.fitBounds(viewport)
     })
   }

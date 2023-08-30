@@ -4,42 +4,44 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '../store/store'
 
 
-const Fabs = () => {
+const MobileFabs = () => {
 
-  const { cities, menu, setCityName, setMenu } = useStore()
+  const { mobileFabsVisible, availableCities, fabsMenuVisible } = useStore()
+  const { setSelectedCityName, setFabsMenuVisible } = useStore()
   const theme = useTheme()
 
   return (
     <RootBox>
-      { !menu && <FabGroup>
-        { 
-          cities.map((item, i) => (
-            <Fab
-              key={i} 
-              variant='extended' 
-              sx={{background: theme.palette.menubar.main, color: theme.palette.menubar.font}}
-              onClick={() => {
-                setCityName(item.city)
-                setMenu(false)
-              }}
-            >
-              { item.name }
-            </Fab>
-          ))
-        }
-      </FabGroup>
+      {!fabsMenuVisible && mobileFabsVisible &&
+        <FabGroup>
+          { 
+            availableCities.map((item, i) => (
+              <Fab
+                key={i} 
+                variant='extended' 
+                sx={{background: theme.palette.menubar.main, color: theme.palette.menubar.font}}
+                onClick={() => {
+                  setSelectedCityName(item.city)
+                  setFabsMenuVisible(false)
+                }}
+              >
+                { item.name }
+              </Fab>
+            ))
+          }
+        </FabGroup>
       }
     </RootBox>
   )
 }
 
-export default observer(Fabs)
+export default observer(MobileFabs)
 
 const RootBox = styled('div')`
   width: 90%;
   z-index: 100;
   position: fixed;
-  top: 15%;
+  top: 13%;
   left: 5%;
   display: flex;
   justify-content: center;

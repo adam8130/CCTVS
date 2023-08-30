@@ -3,9 +3,10 @@ import { GoogleMap, InfoWindow, Marker } from "@react-google-maps/api";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { dark } from "../theme/darkMap"
+import Rainning from "../components/Rainning";
+import Loading from "../components/Loading";
 import axios from "axios";
 import * as qs from 'qs'
-import Rainning from "../components/Rainning";
 
 
 
@@ -15,23 +16,27 @@ const Map = (props) => {
   const [ center, setCenter ] = useState(null)
   const [ data1, setData1 ] = useState([])
   const [ data2, setData2 ] = useState([])
+  const [ tilesLoaded, setTilesLoaded ] = useState(false)
   const [ rainningArr, setRainningArr ] = useState([])
   const [ popupInfo, setPopupInfo ] = useState(null)
-  const { map, token, cityName, mode, selected, zoomed, searchData, serverURL } = useStore()
-  const { setCameraURL, setCameraDesc, setToken } = useStore()
-  const { setSelected, setMap, setZoomed, setBounds } = useStore()
+  const { map, apiToken, selectedCityName, themeMode, selectedCCTVID, searchData, serverURL } = useStore()
+  const { setVideoURL, setVideoName, setApiToken } = useStore()
+  const { setSelectedCCTVID, setMap, setCurrentMapZoomedLevel, setCurrentMapBounds } = useStore()
 
   // GoogleMap參數
   const options = useMemo(()=>({
     disableDefaultUI: true,
     gestureHandling: "greedy",
-    styles: mode? '' : dark 
-  }),[mode])
+    styles: themeMode? '' : dark 
+  }),[themeMode])
 
-  // useEffect取得用戶位置 & 設定地圖初始位置
+  // 取得用戶位置 & 設定地圖初始位置
   useEffect(()=>{
-    navigator.geolocation.getCurrentPosition(({ coords })=>{
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
       setCenter({ lat: coords.latitude, lng: coords.longitude })
+    })
+    navigator.geolocation.getCurrentPosition((e) => {
+      console.log(e)
     })
   },[])
 
@@ -59,7 +64,7 @@ const Map = (props) => {
   useEffect(() => {
 
     // 取得token
-    !token && axios({
+    !apiToken && axios({
       method: 'POST',
       url: 'https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -68,12 +73,12 @@ const Map = (props) => {
         client_id: process.env.REACT_APP_TDX_KEY,
         client_secret: process.env.REACT_APP_TDX_VAL
       }),
-    }).then(res => setToken(res.data.access_token))
+    }).then(res => setApiToken(res.data.access_token))
 
     // 取得response
-    if (['YilanCounty', 'HualienCounty', 'MiaoliCounty'].includes(cityName)) {
+    if (['YilanCounty', 'HualienCounty', 'MiaoliCounty'].includes(selectedCityName)) {
       // EdgeCase
-      axios(`${serverURL}/cities?cityName=${cityName}`).then(res => {
+      axios(`${serverURL}/cities?cityName=${selectedCityName}`).then(res => {
         if (!searchData) {
           const view = new window.google.maps.LatLngBounds()
           res.data.forEach(item => view.extend({lat:  Number(item.PositionLat), lng:  Number(item.PositionLon)}))
@@ -85,9 +90,9 @@ const Map = (props) => {
     }
     else {
       // 取得縣市影像
-      token && cityName && axios({
-        url: `https://tdx.transportdata.tw/api/basic/v2/Road/Traffic/CCTV/City/${cityName}?%24top=1000&%24format=JSON`,
-        headers: { "authorization": `Bearer ${token}` }
+      apiToken && selectedCityName && axios({
+        url: `https://tdx.transportdata.tw/api/basic/v2/Road/Traffic/CCTV/City/${selectedCityName}?%24top=1000&%24format=JSON`,
+        headers: { "authorization": `Bearer ${apiToken}` }
       }).then(res => {
         if (!searchData) {
           const view = new window.google.maps.LatLngBounds()
@@ -97,37 +102,37 @@ const Map = (props) => {
         setData1(res.data.CCTVs)
       })
       // 取得省道影像
-      token && cityName && axios({
-        url: `${serverURL}/cities?cityName=${cityName}`,
+      apiToken && selectedCityName && axios({
+        url: `${serverURL}/cities?cityName=${selectedCityName}`,
       }).then(res => setData2(res.data))
     }
 
-  },[token, cityName, map, serverURL, searchData, setToken])
+  },[apiToken, selectedCityName, map, serverURL, searchData, setApiToken])
 
 
   // 取得CCTV資源
-  const getVideoSource = (item, cityName) => {
+  const getVideoSource = (item, selectedCityName) => {
     if (item.ID) {
-      setCameraURL(item.VideoStreamURL)
-      setCameraDesc({t1: item.RoadName, t2: item.SurveillanceDescription})
+      setVideoURL(item.VideoStreamURL)
+      setVideoName({t1: item.RoadName, t2: item.SurveillanceDescription})
     }
-    else if (['Taipei', 'ChanghuaCounty', 'YunlinCounty'].includes(cityName)) {
-      setCameraURL(item.VideoStreamURL)
-      setCameraDesc({t1: item.RoadName, t2: item.SurveillanceDescription})
+    else if (['Taipei', 'ChanghuaCounty', 'YunlinCounty'].includes(selectedCityName)) {
+      setVideoURL(item.VideoStreamURL)
+      setVideoName({t1: item.RoadName, t2: item.SurveillanceDescription})
     }
-    else if (['YilanCounty'].includes(cityName)) {
+    else if (['YilanCounty'].includes(selectedCityName)) {
       const did = item.did
       axios(`https://ilcpb.ivs.hinet.net/public/ajaxGetStream?did=${did}&page=ilcpb`)
       .then(res => {
-        setCameraURL(res.data.data[0].camurl)
-        setCameraDesc({t1: item.RoadName, t2: item.SurveillanceDescription})
+        setVideoURL(res.data.data[0].camurl)
+        setVideoName({t1: item.RoadName, t2: item.SurveillanceDescription})
       })
     }
     else {
-      setCameraURL(`${serverURL}/api?cityName=${cityName}&url=${item.VideoStreamURL}`)
-      setCameraDesc({t1: item.RoadName, t2: item.SurveillanceDescription})
+      setVideoURL(`${serverURL}/api?cityName=${selectedCityName}&url=${item.VideoStreamURL}`)
+      setVideoName({t1: item.RoadName, t2: item.SurveillanceDescription})
     }
-    setSelected(item.CCTVID)
+    setSelectedCCTVID(item.CCTVID)
   }
 
   return (
@@ -136,19 +141,21 @@ const Map = (props) => {
       mapContainerStyle={{ width: '100%', height: '100%' }}
       center={center}
       options={options}
-      onZoomChanged={() => map && setZoomed(map.zoom)}
+      onZoomChanged={() => map && setCurrentMapZoomedLevel(map.zoom)}
       onLoad={(map) => setMap(map)}
-      onBoundsChanged={() => setBounds(map.getBounds())}
+      onBoundsChanged={() => setCurrentMapBounds(map.getBounds())}
+      onTilesLoaded={() => setTilesLoaded(true)}
     >
+      { !tilesLoaded && <Loading /> }
       { data1 && data1.map(item =>
         <Marker
           key={item.CCTVID}
           position={{lat: Number(item.PositionLat), lng: Number(item.PositionLon)}}
-          onClick={() => getVideoSource(item, cityName)}
+          onClick={() => getVideoSource(item, selectedCityName)}
           icon={{ 
-            url: selected === item.CCTVID ? 
-            require('../static/markers/live64.png') :
-            require('../static/markers/live32.png') 
+            url: selectedCCTVID === item.CCTVID ? 
+            require('../static/markers/live-orange32.png') :
+            require('../static/markers/live-red32.png') 
           }}
         />
       )}
@@ -157,11 +164,11 @@ const Map = (props) => {
         <Marker
           key={item.CCTVID}
           position={{lat: item.PositionLat, lng: item.PositionLon}}
-          onClick={() => getVideoSource(item, cityName)}
+          onClick={() => getVideoSource(item, selectedCityName)}
           icon={{ 
-            url: selected === item.CCTVID ? 
-            require('../static/markers/live64.png') :
-            require('../static/markers/live32.png') 
+            url: selectedCCTVID === item.CCTVID ? 
+            require('../static/markers/live-orange32.png') :
+            require('../static/markers/live-red32.png') 
           }}
         />
       )}
@@ -193,7 +200,7 @@ const Map = (props) => {
       )}
 
       { rainningArr?.map((item, i) => 
-        <Rainning key={i} item={item} zoomed={zoomed}/> 
+        <Rainning key={i} {...item} /> 
       )}
     </GoogleMap>
   )

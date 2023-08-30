@@ -1,8 +1,9 @@
 https://zzdx12345.github.io/CCTVS/
 
-This project is designed for people who do not know where it's currently raining now or not
-You can easily type where you wanna go into the search bar, and all the cameras around your destination would be show up and 
-Alternatively you can select a city where you want to take a look via fabs
+This project is designed for people who do not know where it's currently raining now or not<br>
+You can easily type where you wanna go into the search bar, and all the cameras around your destination
+would be show up and<br>
+Alternatively you can select a city where you want to take a look via fabs<br>
 
 ![Image text](./screen-shot.png)
 

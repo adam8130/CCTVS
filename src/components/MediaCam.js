@@ -3,7 +3,7 @@ import { styled, IconButton, useMediaQuery } from "@mui/material";
 import { useStore } from "../store/store";
 import { observer } from "mobx-react-lite";
 import { Circle, Close, OpenInFull } from "@mui/icons-material";
-import MaskBox from "./MaskBox";
+import MeidaLoadingMask from "./MeidaLoadingMask";
 import useDrag from '../hooks/useDrag'
 import useResize from "../hooks/useResize";
 import Hls from 'hls.js'
@@ -12,8 +12,8 @@ import axios from "axios";
 
 
 const MediaCam = ({ type }) => {
-
-  const { cityName, cameraURL, cameraDesc, isMobile, serverURL, setVideoRef, setCameraURL } = useStore()
+  
+  const { selectedCityName, videoURL, videoName, isMobile, serverURL, setVideoRef, setVideoURL } = useStore()
   const [ isLoading, setIsLoading ] = useState(true)
   const isLandscape = useMediaQuery('(orientation: landscape)')
   const ref = useRef(null)
@@ -30,33 +30,33 @@ const MediaCam = ({ type }) => {
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.src = cameraURL
+      ref.current.src = videoURL
       setIsLoading(true)
       setVideoRef(ref)
     }
-  }, [ref, type, cameraURL, setVideoRef, setIsLoading, isMobile])
+  }, [ref, type, videoURL, setVideoRef, setIsLoading, isMobile])
 
   // 處理iframe
   useEffect(() => {
-    if (type === 'iframe' && cameraURL && ref.current) {
+    if (type === 'iframe' && videoURL && ref.current) {
       if (ref.current.contentDocument || ref.current.contentWindow) {
         setIsLoading(false)
       }
     }
-  } ,[type, ref, cameraURL])
+  } ,[type, ref, videoURL])
 
   // 處理.m3u8
   useEffect(() => {
     let hlsPlayer
-    if (type !== 'img' && cityName === 'YilanCounty') {
+    if (type !== 'img' && selectedCityName === 'YilanCounty') {
       hlsPlayer = new Hls()
-      hlsPlayer.loadSource(cameraURL)
+      hlsPlayer.loadSource(videoURL)
       hlsPlayer.attachMedia(ref.current)
     }
     return () => {
-      type !== 'img' && cityName === 'YilanCounty' && hlsPlayer.destroy()
+      type !== 'img' && selectedCityName === 'YilanCounty' && hlsPlayer.destroy()
     }
-  }, [type, cameraURL, ref, cityName])
+  }, [type, videoURL, ref, selectedCityName])
 
   return (
     <RootBox 
@@ -65,15 +65,17 @@ const MediaCam = ({ type }) => {
       ismobile={Number(isMobile)}
       islandscape={Number(isLandscape)}
     >
-      <Resize id='Resize'><OpenInFull/></Resize>
+      <Resize id='Resize'>
+        <OpenInFull/>
+      </Resize>
       <TitleBox ismobile={Number(isMobile)} isloading={Number(isLoading)}>
         <div className='top-bar'>
           <Circle/>
-          <p>{ cameraDesc.t1 ? cameraDesc.t1 : cameraDesc.t2 ? cameraDesc.t2 : ' --- ' }</p>
+          <p>{ videoName.t1 ? videoName.t1 : videoName.t2 ? videoName.t2 : ' --- ' }</p>
         </div>
 
         <IconButton onClick={(e) => {
-          setCameraURL(null)
+          setVideoURL(null)
           axios(`${serverURL}/close`)
         }}>
           <Close sx={{fontSize: isMobile ? '1.2rem' : '1.5rem'}}/>
@@ -82,7 +84,7 @@ const MediaCam = ({ type }) => {
 
       <div className="CCTV-Box">
         
-        { isLoading &&  <MaskBox/> }
+        { isLoading &&  <MeidaLoadingMask/> }
         
         { type === 'img' && 
           <img 
@@ -122,11 +124,11 @@ export default observer(MediaCam)
 const RootBox = styled('div')(({ismobile, media, islandscape}) => `
   z-index: 90;
   position: absolute;
-  width: ${ismobile? '250px' : '500px'};
-  height: ${ismobile? '150px' : '350px'};
+  width: ${ismobile? '300px' : '500px'};
+  height: ${ismobile? '200px' : '350px'};
   top: ${ismobile? '25%' : '3%'};
   left: ${ismobile? '5%' : '5%'};
-  ${islandscape && 'top: 5%; left: 5%'};
+  ${islandscape && 'top: 5%; left: 10%'};
     .CCTV-Box {
       position: relative;
       width: 100%;
@@ -138,7 +140,6 @@ const RootBox = styled('div')(({ismobile, media, islandscape}) => `
       background: black;
     }
 `)
-
 const TitleBox = styled('div')(({ismobile, isloading, theme}) => ` 
   width: 100%;
   height: ${ismobile ? '25px' : '40px'};
@@ -165,7 +166,6 @@ const TitleBox = styled('div')(({ismobile, isloading, theme}) => `
         }
     }
 `)
-
 const Resize = styled('div')`
     width: 30px;
     height: 30px;
