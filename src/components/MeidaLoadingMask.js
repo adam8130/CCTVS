@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material'
-import { useStore } from '../store/store';
 
 const Root = styled("div")(({ mobile }) => (`
   width: 100%;
@@ -70,32 +69,34 @@ const Root = styled("div")(({ mobile }) => (`
   }
 `));
 
-export default function MeidaLoadingMask() {
+export default function MeidaLoadingMask({ mobile, error }) {
   const [infoMsgVisible, setInfoMsgVisible] = useState(false)
-  const { isMobile } = useStore()
   
   useEffect(() => {  
-    const timer = setTimeout(() => {
-      setInfoMsgVisible(true)
-
-    }, 5000)
+    const timer = setTimeout(() => setInfoMsgVisible(true), 5000)
 
     return () => clearTimeout(timer)
-  }, [isMobile])
+  }, [])
 
   return (
-    <Root mobile={Number(isMobile)}>
-      <span>L</span>
-      <span>o</span>
-      <span>a</span>
-      <span>d</span>
-      <span>i</span>
-      <span>n</span>
-      <span>g</span>
-      <span>.</span>
-      <span>.</span>
-      <span>.</span>
-      {infoMsgVisible && (
+    <Root mobile={mobile}>
+      {!error ? (
+        <>
+          <span>L</span>
+          <span>o</span>
+          <span>a</span>
+          <span>d</span>
+          <span>i</span>
+          <span>n</span>
+          <span>g</span>
+          <span>.</span>
+          <span>.</span>
+          <span>.</span>
+        </>
+      ) : (
+        <h6>此影像來源已失效, 請換一個影像來源</h6>
+      )}
+      {infoMsgVisible && !error &&(
         <h6>影像由各縣市政府維護, 如果一直沒有加載完成, 請換一個影像來源</h6>
       )}
     </Root>

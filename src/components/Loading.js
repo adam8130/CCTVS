@@ -6,7 +6,7 @@ const Root = styled("div")`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(230, 230, 230);
   z-index: 100;
   display: flex;
   justify-content: center;

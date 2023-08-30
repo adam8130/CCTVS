@@ -12,12 +12,13 @@ import axios from "axios";
 
 
 const MediaCam = ({ type }) => {
-  
+
   const { selectedCityName, videoURL, videoName, isMobile, serverURL, setVideoRef, setVideoURL } = useStore()
-  const [ isLoading, setIsLoading ] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isMediaError, setIsMediaError] = useState(false)
   const isLandscape = useMediaQuery('(orientation: landscape)')
   const ref = useRef(null)
-  
+
   useDrag('RootBox')
   useResize('Resize')
 
@@ -26,6 +27,7 @@ const MediaCam = ({ type }) => {
     ismobile: Number(isMobile),
     loading: 'lazy',
     media: type,
+    onError: () => setIsMediaError(true)
   }
 
   useEffect(() => {
@@ -43,7 +45,7 @@ const MediaCam = ({ type }) => {
         setIsLoading(false)
       }
     }
-  } ,[type, ref, videoURL])
+  }, [type, ref, videoURL])
 
   // 處理.m3u8
   useEffect(() => {
@@ -59,61 +61,68 @@ const MediaCam = ({ type }) => {
   }, [type, videoURL, ref, selectedCityName])
 
   return (
-    <RootBox 
-      id='RootBox' 
+    <RootBox
+      id='RootBox'
       media={type}
       ismobile={Number(isMobile)}
       islandscape={Number(isLandscape)}
     >
       <Resize id='Resize'>
-        <OpenInFull/>
+        <OpenInFull />
       </Resize>
       <TitleBox ismobile={Number(isMobile)} isloading={Number(isLoading)}>
         <div className='top-bar'>
-          <Circle/>
-          <p>{ videoName.t1 ? videoName.t1 : videoName.t2 ? videoName.t2 : ' --- ' }</p>
+          <Circle />
+          <p>{videoName.t1 ? videoName.t1 : videoName.t2 ? videoName.t2 : ' --- '}</p>
         </div>
 
-        <IconButton onClick={(e) => {
-          setVideoURL(null)
-          axios(`${serverURL}/close`)
-        }}>
-          <Close sx={{fontSize: isMobile ? '1.2rem' : '1.5rem'}}/>
+        <IconButton 
+          onClick={() => {
+            axios(`${serverURL}/close`)
+            setVideoURL(null)
+          }}
+        >
+          <Close sx={{ fontSize: isMobile ? '1.2rem' : '1.5rem' }} />
         </IconButton>
       </TitleBox>
 
       <div className="CCTV-Box">
-        
-        { isLoading &&  <MeidaLoadingMask/> }
-        
-        { type === 'img' && 
-          <img 
+
+        {isLoading && (
+          <MeidaLoadingMask 
+            mobile={Number(isMobile)}
+            error={Number(isMediaError)} 
+          />
+        )}
+
+        {type === 'img' &&
+          <img
             alt=''
-            onLoad={() => setIsLoading(false)} 
+            onLoad={() => setIsLoading(false)}
             {...options}
-          /> 
+          />
         }
 
-        { type === 'iframe' &&
-            <iframe 
-              title='iframeCam'
-              style={{ pointerEvents: 'none' }}
-              onLoad={() => setIsLoading(false)}
-              scrolling="no"
-              {...options} 
-            /> 
+        {type === 'iframe' &&
+          <iframe
+            title='iframeCam'
+            style={{ pointerEvents: 'none' }}
+            onLoad={() => setIsLoading(false)}
+            scrolling="no"
+            {...options}
+          />
         }
 
-        { type === 'video' && 
-          <video 
+        {type === 'video' &&
+          <video
             autoPlay
             controls
             playsInline
             onLoadedData={() => setIsLoading(false)}
             {...options}
-          /> 
+          />
         }
-        
+
       </div>
     </RootBox>
   )
@@ -122,13 +131,13 @@ const MediaCam = ({ type }) => {
 export default observer(MediaCam)
 
 
-const RootBox = styled('div')(({ismobile, media, islandscape}) => `
+const RootBox = styled('div')(({ ismobile, media, islandscape }) => `
   z-index: 90;
   position: absolute;
-  width: ${ismobile? '300px' : '500px'};
-  height: ${ismobile? '200px' : '350px'};
-  top: ${ismobile? '25%' : '3%'};
-  left: ${ismobile? '5%' : '5%'};
+  width: ${ismobile ? '300px' : '500px'};
+  height: ${ismobile ? '200px' : '350px'};
+  top: ${ismobile ? '25%' : '3%'};
+  left: ${ismobile ? '5%' : '5%'};
   ${islandscape && 'top: 5%; left: 10%'};
     .CCTV-Box {
       position: relative;
@@ -141,7 +150,7 @@ const RootBox = styled('div')(({ismobile, media, islandscape}) => `
       background: black;
     }
 `)
-const TitleBox = styled('div')(({ismobile, isloading, theme}) => ` 
+const TitleBox = styled('div')(({ ismobile, isloading, theme }) => ` 
   width: 100%;
   height: ${ismobile ? '25px' : '40px'};
   background: ${theme.palette.menubar.main};

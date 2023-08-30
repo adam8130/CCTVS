@@ -6,19 +6,21 @@ import { dark } from "../theme/darkMap"
 import Rainning from "../components/Rainning";
 import Loading from "../components/Loading";
 import axios from "axios";
+import RainningArea from "../components/RainningArea";
 
 
 const Map = (props) => {
 
   // 定義變量
-  const [center, setCenter] = useState(null)
-  const [CCTVSData, setCCTVSData] = useState([])
-  const [tilesLoaded, setTilesLoaded] = useState(false)
-  const [rainningArr, setRainningArr] = useState([])
-  const [popupInfo, setPopupInfo] = useState(null)
-  const { map, selectedCityName, themeMode, selectedCCTVID, searchData, serverURL } = useStore()
-  const { setVideoURL, setVideoName } = useStore()
-  const { setSelectedCCTVID, setMap, setCurrentMapZoomedLevel, setCurrentMapBounds } = useStore()
+  const [center, setCenter] = useState(null);
+  const [CCTVSData, setCCTVSData] = useState([]);
+  const [rainningArr, setRainningArr] = useState([]);
+  const [rainningAreaArr, setRainningAreaArr] = useState([]);
+  const [popupInfo, setPopupInfo] = useState(null);
+  const { map, selectedCityName, selectedCCTVID, searchData, serverURL } = useStore();
+  const { themeMode, mapTilesLoaded, rainningCloudVisible, rainningAreaVisible } = useStore();
+  const { setVideoURL, setVideoName, setMapTilesLoaded } = useStore();
+  const { setSelectedCCTVID, setMap, setCurrentMapZoomedLevel, setCurrentMapBounds } = useStore();
 
   // GoogleMap參數
   const options = useMemo(() => ({
@@ -38,19 +40,26 @@ const Map = (props) => {
   useEffect(() => {
     axios(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=${process.env.REACT_APP_WEATHER_KEY}&elementName=Weather&parameterName=CITY`)
       .then(res => {
-        let arr = []
+        let rainningArr = []
+        let rainningAreaArr = []
         res.data.records.location.forEach(item => {
           if (item.weatherElement[0].elementValue.includes('雨')) {
-            arr.push({
+            rainningArr.push({
               locationName: item.locationName,
               lat: item.lat,
               lon: item.lon,
               weather: item.weatherElement[0].elementValue
             })
           }
+          if (
+            item.weatherElement[0].elementValue.includes('雨') && 
+            !rainningAreaArr.includes(item.parameter[0].parameterValue)
+          ) {
+            rainningAreaArr.push(item.parameter[0].parameterValue)
+          }
         })
-        console.log(arr)
-        setRainningArr(arr)
+        setRainningAreaArr(rainningAreaArr);
+        setRainningArr(rainningArr)
       })
   }, [])
 
@@ -116,9 +125,9 @@ const Map = (props) => {
       onZoomChanged={() => map && setCurrentMapZoomedLevel(map.zoom)}
       onLoad={(map) => setMap(map)}
       onBoundsChanged={() => setCurrentMapBounds(map.getBounds())}
-      onTilesLoaded={() => setTilesLoaded(true)}
+      onTilesLoaded={() => setMapTilesLoaded(true)}
     >
-      {!tilesLoaded && <Loading />}
+      {!mapTilesLoaded && <Loading />}
       {CCTVSData && CCTVSData.map(item =>
         <Marker
           key={item.CCTVID}
@@ -160,8 +169,14 @@ const Map = (props) => {
         </InfoWindow>
       )}
 
-      {rainningArr?.map((item, i) =>
-        <Rainning key={i} {...item} />
+      {rainningAreaVisible && rainningAreaArr.length && (
+        <RainningArea list={rainningAreaArr} />
+      )}
+
+      {rainningCloudVisible && 
+        rainningArr?.map((item, i) => (
+          <Rainning key={i} {...item} />
+        )
       )}
     </GoogleMap>
   )

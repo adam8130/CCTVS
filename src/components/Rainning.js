@@ -15,8 +15,6 @@ const Rainning = ({ lat, lon, locationName, weather }) => {
     boxStyle: { overflow: 'unset' }
   }
 
-  console.log(weather)
-
   return (
     <InfoBox
       position={{ lat: lat, lng: lon }}
