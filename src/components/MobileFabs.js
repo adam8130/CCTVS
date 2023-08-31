@@ -2,30 +2,52 @@ import React from 'react'
 import { Fab, styled, useTheme } from '@mui/material'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../store/store'
+import { getUserCurrentCity } from '../utils/getUserCurrentCity'
+import { NearMe } from '@mui/icons-material'
 
 
 const MobileFabs = () => {
 
-  const { mobileFabsVisible, availableCities, fabsMenuVisible } = useStore()
-  const { setSelectedCityName, setFabsMenuVisible } = useStore()
+  const { map, userPosition, mobileFabsVisible, availableCities, fabsMenuVisible } = useStore()
+  const { setSelectedCityName, setFabsMenuVisible, setDisabledViewportExtend } = useStore()
   const theme = useTheme()
 
   return (
     <RootBox>
       {!fabsMenuVisible && mobileFabsVisible &&
         <FabGroup>
-          { 
+          <Fab
+            variant='extended'
+            size='small'
+            sx={{ background: theme.palette.menubar.main, color: theme.palette.menubar.font }}
+            onClick={async () => {
+              const result = await getUserCurrentCity(userPosition)
+              if (!result) return;
+
+              availableCities.forEach(item => {
+                if (result.includes(item.cityZH)) {
+                  setSelectedCityName(item.cityEN)
+                  setDisabledViewportExtend(true)
+                  map.setZoom(15)
+                  map.panTo({ lat: Number(userPosition.lat), lng: Number(userPosition.lng) })
+                }
+              })
+            }}
+          >
+            <NearMe />
+          </Fab>
+          {
             availableCities.map((item, i) => (
               <Fab
-                key={i} 
-                variant='extended' 
-                sx={{background: theme.palette.menubar.main, color: theme.palette.menubar.font}}
+                key={i}
+                variant='extended'
+                sx={{ background: theme.palette.menubar.main, color: theme.palette.menubar.font }}
                 onClick={() => {
-                  setSelectedCityName(item.city)
+                  setSelectedCityName(item.cityEN)
                   setFabsMenuVisible(false)
                 }}
               >
-                { item.name }
+                {item.cityZH}
               </Fab>
             ))
           }

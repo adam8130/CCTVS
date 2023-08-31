@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { AppBar, styled, IconButton, useMediaQuery } from "@mui/material";
-import { Menu, Search, DarkMode, VideoCameraBack } from '@mui/icons-material';
+import { Menu, Search, DarkMode } from '@mui/icons-material';
 import { AccountCircle, FormatLineSpacing, CloudOff } from '@mui/icons-material';
 import AutoComplete from './AutoComplete';
 
@@ -15,11 +15,11 @@ const Menubar = () => {
   const {
     isMobile, mapTilesLoaded, mobileFabsVisible,
     searchbarVisible, rainningCloudVisible,
-    rainningAreaVisible, themeMode, videoURL
+    rainningAreaVisible, themeMode
   } = useStore()
   const {
     setMobileFabsVisible, setThemeMode, setSearchbarVisible,
-    setRainningCloudVisible, setVideoURL, setRainningAreaVisible
+    setRainningCloudVisible, setRainningAreaVisible
   } = useStore()
 
   return (
@@ -65,6 +65,7 @@ const Menubar = () => {
               isMenuExtended && setMobileFabsVisible(false)
               setIsMenuExtended((prev) => !prev)
               setMobileFabsVisible(!mobileFabsVisible)
+              setIsInputExtended(false)
             }}
           >
             <Menu />
@@ -81,12 +82,12 @@ const Menubar = () => {
                 <Search />
                 {searchbarVisible && (
                   <div className='popup-bar' onClick={(e) => e.stopPropagation()}>
-                    <AutoComplete />
+                    <AutoComplete extend={false}/>
                   </div>
                 )}
               </IconButtonWrapper>
-              <IconButtonWrapper param={Number(videoURL)} onClick={() => setVideoURL(null)}>
-                <VideoCameraBack />
+              <IconButtonWrapper param={Number(rainningAreaVisible)} onClick={() => setRainningAreaVisible(!rainningAreaVisible)}>
+               <FormatLineSpacing />
               </IconButtonWrapper>
               <IconButtonWrapper param={Number(!rainningCloudVisible)} onClick={() => setRainningCloudVisible(!rainningCloudVisible)}>
                 <CloudOff />
@@ -112,7 +113,7 @@ const RootBox = styled(AppBar)(
     };
     height: ${
       mobile && !landscape ? '50px' :
-      mobile && extended && landscape ? '85%' :
+      mobile && extended && landscape ? '90%' :
       !mobile && !tilesloaded ? '50px' :
       extended ? '45%' : '50px'
     };

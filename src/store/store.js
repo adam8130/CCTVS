@@ -8,24 +8,24 @@ class Store {
   }
 
   availableCities = [
-    { name: '台北', city: 'Taipei' },
-    { name: '新北', city: 'NewTaipei' },
-    { name: '基隆', city: 'Keelung' },
-    { name: '桃園', city: 'Taoyuan' },
-    { name: '苗栗', city: 'MiaoliCounty' },
-    { name: '竹北', city: 'HsinchuCounty' },
-    { name: '新竹', city: 'Hsinchu' },
-    { name: '台中', city: 'Taichung' },
-    { name: '南投', city: 'NantouCounty' },
-    { name: '彰化', city: 'ChanghuaCounty' },
-    { name: '雲林', city: 'YunlinCounty' },
-    { name: '嘉義', city: 'Chiayi' },
-    { name: '宜蘭', city: 'YilanCounty' },
-    { name: '花蓮', city: 'HualienCounty' },
-    { name: '台南', city: 'Tainan' },
-    { name: '高雄', city: 'Kaohsiung' },
-    { name: '台東', city: 'TaitungCounty' },
-    { name: '屏東', city: 'PingtungCounty' },
+    { cityZH: '台北', cityEN: 'Taipei' },
+    { cityZH: '新北', cityEN: 'NewTaipei' },
+    { cityZH: '基隆', cityEN: 'Keelung' },
+    { cityZH: '桃園', cityEN: 'Taoyuan' },
+    { cityZH: '苗栗', cityEN: 'MiaoliCounty' },
+    { cityZH: '竹北', cityEN: 'HsinchuCounty' },
+    { cityZH: '新竹', cityEN: 'Hsinchu' },
+    { cityZH: '台中', cityEN: 'Taichung' },
+    { cityZH: '南投', cityEN: 'NantouCounty' },
+    { cityZH: '彰化', cityEN: 'ChanghuaCounty' },
+    { cityZH: '雲林', cityEN: 'YunlinCounty' },
+    { cityZH: '嘉義', cityEN: 'Chiayi' },
+    { cityZH: '宜蘭', cityEN: 'YilanCounty' },
+    { cityZH: '花蓮', cityEN: 'HualienCounty' },
+    { cityZH: '台南', cityEN: 'Tainan' },
+    { cityZH: '高雄', cityEN: 'Kaohsiung' },
+    { cityZH: '台東', cityEN: 'TaitungCounty' },
+    { cityZH: '屏東', cityEN: 'PingtungCounty' },
   ]
   
   // Api & Data
@@ -54,6 +54,7 @@ class Store {
   rainningAreaVisible = true
   searchbarVisible = false
   mobileFabsVisible = true
+  disabledViewportExtend = false
 
   setIsMobile = act => this.isMobile = act
   setThemeMode = act => this.themeMode = act
@@ -62,10 +63,12 @@ class Store {
   setRainningAreaVisible = act => this.rainningAreaVisible = act
   setSearchbarVisible = act => this.searchbarVisible = act
   setMobileFabsVisible = act => this.mobileFabsVisible = act
+  setDisabledViewportExtend = act => this.disabledViewportExtend = act
 
   // map
   map = null
   mapTilesLoaded = false
+  userPosition = null
   isMapDragging = false
   currentMapBounds = null
   currentMapZoomedLevel = null
@@ -73,6 +76,7 @@ class Store {
   setMap = act => this.map = act
   setMapTilesLoaded = act => this.mapTilesLoaded = act
   setIsMapDragging = act => this.isMapDragging = act
+  setUserPosition = act => this.userPosition = act
   setCurrentMapBounds = act => this.currentMapBounds = act
   setCurrentMapZoomedLevel = act => this.currentMapZoomedLevel = act
 

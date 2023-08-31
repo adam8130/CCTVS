@@ -3,11 +3,11 @@ import { InfoBox } from '@react-google-maps/api'
 import { styled } from '@mui/material'
 import { useStore } from '../store/store'
 import { observer } from 'mobx-react-lite'
+import { isInsideBoundary } from '../utils/isInsideBoundary'
 
+const Rainning = ({ lat, lon, locationName }) => {
 
-const Rainning = ({ lat, lon, locationName, weather }) => {
-
-  const { currentMapZoomedLevel } = useStore()
+  const { currentMapZoomedLevel, currentMapBounds } = useStore()
 
   const option = {
     closeBoxURL: '',
@@ -22,19 +22,23 @@ const Rainning = ({ lat, lon, locationName, weather }) => {
     >
       <RootBox zoomed={currentMapZoomedLevel}>
         <p>{locationName}</p>
-        {currentMapZoomedLevel > 14 &&
-          <div className='rain'>
-            <span style={{ '--i': 10 }}></span>
-            <span style={{ '--i': 12 }}></span>
-            <span style={{ '--i': 16 }}></span>
-            <span style={{ '--i': 19 }}></span>
-            <span style={{ '--i': 10 }}></span>
-            <span style={{ '--i': 17 }}></span>
-            <span style={{ '--i': 11 }}></span>
-            <span style={{ '--i': 20 }}></span>
-            <span style={{ '--i': 10 }}></span>
-            <span style={{ '--i': 13 }}></span>
-          </div>
+        {
+          currentMapZoomedLevel > 12 &&
+          isInsideBoundary(lat, lon, currentMapBounds) &&
+          (
+            <div className='rain'>
+              <span style={{ '--i': 10 }}></span>
+              <span style={{ '--i': 12 }}></span>
+              <span style={{ '--i': 16 }}></span>
+              <span style={{ '--i': 19 }}></span>
+              <span style={{ '--i': 10 }}></span>
+              <span style={{ '--i': 17 }}></span>
+              <span style={{ '--i': 11 }}></span>
+              <span style={{ '--i': 20 }}></span>
+              <span style={{ '--i': 10 }}></span>
+              <span style={{ '--i': 13 }}></span>
+            </div>
+          )
         }
       </RootBox>
     </InfoBox>

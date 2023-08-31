@@ -10,8 +10,8 @@ import { useCancelShadow } from "../hooks/useCancelShadow"
 
 const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
 
-  const { availableCities, currentMapBounds, map, searchbarVisible } = useStore()
-  const { setSearchData, setSearchbarVisible, setSelectedCityName } = useStore()
+  const { availableCities, currentMapBounds, map, searchbarVisible, isMobile } = useStore()
+  const { setSearchData, setSearchbarVisible, setSelectedCityName, setDisabledViewportExtend } = useStore()
   const [dataArr, setDataArr] = useState(null)
   const [sessionToken, setSessionToken] = useState(null)
   const [service, setService] = useState(null)
@@ -22,6 +22,7 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
     background: 'transparent',
     zIndex: 99,
     event: () => {
+      inputRef.current.blur()
       setInputFocused(false)
       setDataArr(null)
       extended(false)
@@ -61,7 +62,7 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
     placesService.textSearch(request, (results) => {
 
       const viewport = new window.google.maps.LatLngBounds()
-      const formattedCity = availableCities.find((item) => results[0].formatted_address.includes(item.name))
+      const formattedCity = availableCities.find((item) => results[0].formatted_address.includes(item.cityZH))
 
       results?.forEach(place => {
         if (place.geometry.viewport) {
@@ -73,11 +74,13 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
         delete item.permanently_closed
       })
 
-      setSelectedCityName(formattedCity && formattedCity.city)
+      setSelectedCityName(formattedCity && formattedCity.cityEN)
+      setSearchbarVisible(!searchbarVisible)
+      setDisabledViewportExtend(false)
       setDataArr(null)
       setSearchData(results)
-      setSearchbarVisible(!searchbarVisible)
       map.fitBounds(viewport)
+      map.setZoom(13)
     })
   }
 
@@ -89,17 +92,19 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
       focused={Number(inputFocused)}
       onClick={() => {
         setInputFocused(true)
-        extended(true)
+        isMobile && extended(true)
         trigger()
       }}
     >
       <Search />
       {inputRef.current?.value &&
         <Close 
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             setDataArr(null)
             setSearchData(null)
             setInputFocused(false)
+            setSelectedCityName(null)
             extended(false)
             inputRef.current.value = ''
           }} 

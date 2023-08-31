@@ -1,15 +1,18 @@
 import React from 'react'
 import { Fab, styled, useTheme, useMediaQuery } from '@mui/material'
+import { NearMe } from '@mui/icons-material'
+import { getUserCurrentCity } from '../utils/getUserCurrentCity'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../store/store'
 
 
 const Fabs = () => {
 
-  const { availableCities, fabsMenuVisible, isMobile, setSelectedCityName, setFabsMenuVisible, setSearchData } = useStore()
+  const { availableCities, fabsMenuVisible, isMobile, userPosition, map } = useStore()
+  const { setSelectedCityName, setFabsMenuVisible, setSearchData, setDisabledViewportExtend } = useStore()
   const isLandscape = useMediaQuery('(orientation: landscape)')
   const theme = useTheme()
-  
+
   return (
     <RootBox>
       <MenuBox 
@@ -19,7 +22,31 @@ const Fabs = () => {
         DropMenu
       </MenuBox>
 
-      { fabsMenuVisible && <FabGroup ismobile={Number(isMobile)} islandscape={Number(isLandscape)}>
+      { fabsMenuVisible && 
+      <FabGroup 
+        ismobile={Number(isMobile)}
+        islandscape={Number(isLandscape)}
+      >
+        <Fab
+          variant='extended' 
+          size='small'
+          sx={{background: theme.palette.menubar.main, color: theme.palette.menubar.font}}
+          onClick={async() => {
+            const result = await getUserCurrentCity(userPosition)
+            if (!result) return;
+
+            availableCities.forEach(item => {
+              if (result.includes(item.cityZH)) {
+                setSelectedCityName(item.cityEN)
+                setDisabledViewportExtend(true)
+                map.setZoom(15)
+                map.panTo({lat: Number(userPosition.lat), lng: Number(userPosition.lng)})
+              } 
+            })
+          }}
+        >
+          <NearMe />
+        </Fab>
         { 
           availableCities.map((item, i) => (
             <Fab
@@ -28,12 +55,13 @@ const Fabs = () => {
               size='small'
               sx={{background: theme.palette.menubar.main, color: theme.palette.menubar.font}}
               onClick={() => {
-                setSelectedCityName(item.city)
+                setSelectedCityName(item.cityEN)
                 setSearchData(null)
                 setFabsMenuVisible(false)
+                setDisabledViewportExtend(false)
               }}
             >
-              { item.name }
+              { item.cityZH }
             </Fab>
           ))
         }
@@ -72,13 +100,9 @@ const MenuBox = styled('div')(({fabsMenuVisible, theme}) => `
 
 const FabGroup = styled('div')(({ismobile, islandscape}) => `
   width: 200px;
-  height: ${islandscape && ismobile ? '300px' : '400px'};
+  height: ${islandscape && ismobile ? '300px' : '300px'};
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   gap: 10px;
-    svg {
-      margin-right: 10px;
-      transform: rotate(30deg);
-    }
 `)

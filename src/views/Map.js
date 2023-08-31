@@ -12,14 +12,13 @@ import RainningArea from "../components/RainningArea";
 const Map = (props) => {
 
   // 定義變量
-  const [center, setCenter] = useState(null);
   const [CCTVSData, setCCTVSData] = useState([]);
   const [rainningArr, setRainningArr] = useState([]);
   const [rainningAreaArr, setRainningAreaArr] = useState([]);
   const [popupInfo, setPopupInfo] = useState(null);
-  const { map, selectedCityName, selectedCCTVID, searchData, serverURL } = useStore();
-  const { themeMode, mapTilesLoaded, rainningCloudVisible, rainningAreaVisible } = useStore();
-  const { setVideoURL, setVideoName, setMapTilesLoaded } = useStore();
+  const { map, selectedCityName, selectedCCTVID, searchData, serverURL, userPosition } = useStore();
+  const { themeMode, mapTilesLoaded, rainningCloudVisible, rainningAreaVisible,disabledViewportExtend } = useStore();
+  const { setVideoURL, setVideoName, setMapTilesLoaded, setUserPosition } = useStore();
   const { setSelectedCCTVID, setMap, setCurrentMapZoomedLevel, setCurrentMapBounds } = useStore();
 
   // GoogleMap參數
@@ -32,9 +31,9 @@ const Map = (props) => {
   // 取得用戶位置 & 設定地圖初始位置
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
-      setCenter({ lat: coords.latitude, lng: coords.longitude })
+      setUserPosition({ lat: coords.latitude, lng: coords.longitude })
     })
-  }, [])
+  }, [setUserPosition])
 
   // 取得天氣資料
   useEffect(() => {
@@ -68,15 +67,19 @@ const Map = (props) => {
     if (!selectedCityName) return;
     axios(`${serverURL}/cities?cityName=${selectedCityName}`)
       .then(res => {
-        console.log(res.data)
-        if (!searchData) {
+        if (!searchData && !disabledViewportExtend) {
           const view = new window.google.maps.LatLngBounds()
-          res.data.CCTVs.forEach(item => view.extend({lat:  Number(item.PositionLat), lng:  Number(item.PositionLon)}))
+          res.data.CCTVs.forEach(item => 
+            view.extend({
+              lat:  Number(item.PositionLat), 
+              lng:  Number(item.PositionLon)
+            })
+          )
           map.fitBounds(view)
         }
         setCCTVSData(res.data.CCTVs)
       })
-  }, [selectedCityName, serverURL, map, searchData])
+  }, [selectedCityName, serverURL, map, searchData, disabledViewportExtend])
 
 
   // 取得CCTV資源
@@ -120,7 +123,7 @@ const Map = (props) => {
     <GoogleMap
       zoom={10}
       mapContainerStyle={{ width: '100%', height: '100%' }}
-      center={center}
+      center={userPosition}
       options={options}
       onZoomChanged={() => map && setCurrentMapZoomedLevel(map.zoom)}
       onLoad={(map) => setMap(map)}
@@ -139,6 +142,14 @@ const Map = (props) => {
               require('../static/markers/live-orange32.png') :
               item.City ? require('../static/markers/live-blue32.png') :
               require('../static/markers/live-green32.png')
+          }}
+        />
+      )}
+      {userPosition && (
+        <Marker
+          position={userPosition}
+          icon={{
+            url: require('../static/markers/ylw32.png') 
           }}
         />
       )}
