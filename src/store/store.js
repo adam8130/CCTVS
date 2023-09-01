@@ -55,6 +55,7 @@ class Store {
   searchbarVisible = false
   mobileFabsVisible = true
   disabledViewportExtend = false
+  CCTVMarkersVisible = true
 
   setIsMobile = act => this.isMobile = act
   setThemeMode = act => this.themeMode = act
@@ -64,6 +65,7 @@ class Store {
   setSearchbarVisible = act => this.searchbarVisible = act
   setMobileFabsVisible = act => this.mobileFabsVisible = act
   setDisabledViewportExtend = act => this.disabledViewportExtend = act
+  setCCTVMarkersVisible = act => this.CCTVMarkersVisible = act
 
   // map
   map = null

@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { AppBar, styled, IconButton, useMediaQuery } from "@mui/material";
 import { Menu, Search, DarkMode } from '@mui/icons-material';
-import { AccountCircle, FormatLineSpacing, CloudOff } from '@mui/icons-material';
+import { AccountCircle, FormatLineSpacing, CloudOff, LocationOff } from '@mui/icons-material';
 import AutoComplete from './AutoComplete';
 
 
@@ -15,11 +15,11 @@ const Menubar = () => {
   const {
     isMobile, mapTilesLoaded, mobileFabsVisible,
     searchbarVisible, rainningCloudVisible,
-    rainningAreaVisible, themeMode
+    rainningAreaVisible, themeMode, CCTVMarkersVisible
   } = useStore()
   const {
     setMobileFabsVisible, setThemeMode, setSearchbarVisible,
-    setRainningCloudVisible, setRainningAreaVisible
+    setRainningCloudVisible, setRainningAreaVisible, setCCTVMarkersVisible
   } = useStore()
 
   return (
@@ -35,7 +35,7 @@ const Menubar = () => {
             <>
               <AutoComplete
                 extend
-                minwidth={'160px'}
+                minwidth={'130px'}
                 maxwidth={'260px'}
                 extended={setIsInputExtended}
               />
@@ -53,9 +53,18 @@ const Menubar = () => {
                   >
                     <CloudOff />
                   </IconButtonWrapper>
+                  <IconButtonWrapper 
+                    param={Number(!CCTVMarkersVisible)} 
+                    onClick={() => setCCTVMarkersVisible(!CCTVMarkersVisible)}
+                  >
+                    <LocationOff />
+                  </IconButtonWrapper>
                 </>
               )}
-              <IconButtonWrapper param={Number(!themeMode)} onClick={() => setThemeMode(!themeMode)}>
+              <IconButtonWrapper 
+                param={Number(!themeMode)} 
+                onClick={() => setThemeMode(!themeMode)}
+              >
                 <DarkMode />
               </IconButtonWrapper>
             </>
@@ -65,6 +74,7 @@ const Menubar = () => {
               isMenuExtended && setMobileFabsVisible(false)
               setIsMenuExtended((prev) => !prev)
               setMobileFabsVisible(!mobileFabsVisible)
+              setRainningAreaVisible(false)
               setIsInputExtended(false)
             }}
           >
@@ -78,7 +88,10 @@ const Menubar = () => {
           </IconButtonWrapper>
           {isMenuExtended && mapTilesLoaded && (
             <>
-              <IconButtonWrapper param={Number(searchbarVisible)} onClick={() => setSearchbarVisible(!searchbarVisible)}>
+              <IconButtonWrapper 
+                param={Number(searchbarVisible)} 
+                onClick={() => setSearchbarVisible(!searchbarVisible)}
+              >
                 <Search />
                 {searchbarVisible && (
                   <div className='popup-bar' onClick={(e) => e.stopPropagation()}>
@@ -86,13 +99,28 @@ const Menubar = () => {
                   </div>
                 )}
               </IconButtonWrapper>
-              <IconButtonWrapper param={Number(rainningAreaVisible)} onClick={() => setRainningAreaVisible(!rainningAreaVisible)}>
+              <IconButtonWrapper 
+                param={Number(rainningAreaVisible)} 
+                onClick={() => setRainningAreaVisible(!rainningAreaVisible)}
+              >
                <FormatLineSpacing />
               </IconButtonWrapper>
-              <IconButtonWrapper param={Number(!rainningCloudVisible)} onClick={() => setRainningCloudVisible(!rainningCloudVisible)}>
+              <IconButtonWrapper 
+                param={Number(!rainningCloudVisible)} 
+                onClick={() => setRainningCloudVisible(!rainningCloudVisible)}
+              >
                 <CloudOff />
               </IconButtonWrapper>
-              <IconButtonWrapper param={Number(!themeMode)} onClick={() => setThemeMode(!themeMode)}>
+              <IconButtonWrapper 
+                param={Number(!CCTVMarkersVisible)} 
+                onClick={() => setCCTVMarkersVisible(!CCTVMarkersVisible)}
+              >
+                <LocationOff />
+              </IconButtonWrapper>
+              <IconButtonWrapper 
+                param={Number(!themeMode)} 
+                onClick={() => setThemeMode(!themeMode)}
+              >
                 <DarkMode />
               </IconButtonWrapper>
               <IconButtonWrapper>

@@ -16,7 +16,7 @@ const Map = (props) => {
   const [rainningArr, setRainningArr] = useState([]);
   const [rainningAreaArr, setRainningAreaArr] = useState([]);
   const [popupInfo, setPopupInfo] = useState(null);
-  const { map, selectedCityName, selectedCCTVID, searchData, serverURL, userPosition } = useStore();
+  const { map, selectedCityName, selectedCCTVID, searchData, serverURL, userPosition, CCTVMarkersVisible } = useStore();
   const { themeMode, mapTilesLoaded, rainningCloudVisible, rainningAreaVisible,disabledViewportExtend } = useStore();
   const { setVideoURL, setVideoName, setMapTilesLoaded, setUserPosition } = useStore();
   const { setSelectedCCTVID, setMap, setCurrentMapZoomedLevel, setCurrentMapBounds } = useStore();
@@ -131,20 +131,22 @@ const Map = (props) => {
       onTilesLoaded={() => setMapTilesLoaded(true)}
     >
       {!mapTilesLoaded && <Loading />}
-      {CCTVSData && CCTVSData.map(item =>
-        <Marker
-          key={item.CCTVID}
-          position={{ lat: Number(item.PositionLat), lng: Number(item.PositionLon) }}
-          onClick={() => getVideoSource(item, selectedCityName)}
-          icon={{
-            url: 
-              selectedCCTVID === item.CCTVID ?
-              require('../static/markers/live-orange32.png') :
-              item.City ? require('../static/markers/live-blue32.png') :
-              require('../static/markers/live-green32.png')
-          }}
-        />
-      )}
+      {CCTVMarkersVisible && 
+        CCTVSData?.map(item =>
+          <Marker
+            key={item.CCTVID}
+            position={{ lat: Number(item.PositionLat), lng: Number(item.PositionLon) }}
+            onClick={() => getVideoSource(item, selectedCityName)}
+            icon={{
+              url: 
+                selectedCCTVID === item.CCTVID ?
+                require('../static/markers/live-orange32.png') :
+                item.City ? require('../static/markers/live-blue32.png') :
+                require('../static/markers/live-green32.png')
+            }}
+          />
+        )
+      }
       {userPosition && (
         <Marker
           position={userPosition}

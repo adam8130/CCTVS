@@ -45,6 +45,7 @@ const MobileFabs = () => {
                 onClick={() => {
                   setSelectedCityName(item.cityEN)
                   setFabsMenuVisible(false)
+                  setDisabledViewportExtend(false)
                 }}
               >
                 {item.cityZH}

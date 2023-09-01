@@ -132,7 +132,7 @@ export default observer(MediaCam)
 
 
 const RootBox = styled('div')(({ ismobile, media, islandscape }) => `
-  z-index: 90;
+  z-index: 200;
   position: absolute;
   width: ${ismobile ? '300px' : '500px'};
   height: ${ismobile ? '200px' : '350px'};

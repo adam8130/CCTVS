@@ -19,7 +19,7 @@ const Root = styled('div')(
       mobile && landscape ? '10%':
       mobile && !landscape ? '3%' : '7%'
     };
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.5);
     transition: all 0.3s;
     section {
       padding-left: 15px;
