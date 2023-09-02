@@ -7,10 +7,17 @@ import { LocationOn } from '@mui/icons-material'
 import { useCancelShadow } from "../hooks/useCancelShadow"
 
 
+function debounce(cb, delay) {
+  let timer
+  return function(...args) {
+    clearTimeout(timer)
+    setTimeout(() => cb.apply(this, args), delay)
+  }
+}
 
 const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
 
-  const { availableCities, currentMapBounds, map, searchbarVisible, isMobile } = useStore()
+  const { availableCities, currentMapBounds, map, isMobile } = useStore()
   const { setSearchData, setSearchbarVisible, setSelectedCityName, setDisabledViewportExtend } = useStore()
   const [dataArr, setDataArr] = useState(null)
   const [sessionToken, setSessionToken] = useState(null)
@@ -36,7 +43,7 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
     setService(new window.google.maps.places.AutocompleteService())
   }, [map])
 
-  const getPrediction = (value) => {
+  const debouncedGetPrediction = debounce((value) => {
     if (value) {
       let queryOption = {
         input: value,
@@ -50,7 +57,7 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
     } else {
       setDataArr(null)
     }
-  }
+  }, 500)
 
   const getResponse = (item) => {
     console.log(item)
@@ -75,7 +82,7 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
       })
 
       setSelectedCityName(formattedCity && formattedCity.cityEN)
-      setSearchbarVisible(!searchbarVisible)
+      
       setDisabledViewportExtend(false)
       setDataArr(null)
       setSearchData(results)
@@ -90,9 +97,11 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
       minwidth={minwidth}
       maxwidth={maxwidth}
       focused={Number(inputFocused)}
-      onClick={() => {
-        setInputFocused(true)
+      onClick={(e) => {
+        e.stopPropagation()
         isMobile && extended(true)
+        inputRef.current.focus()
+        setInputFocused(true)
         trigger()
       }}
     >
@@ -105,7 +114,8 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
             setSearchData(null)
             setInputFocused(false)
             setSelectedCityName(null)
-            extended(false)
+            setSearchbarVisible(false)
+            isMobile && extended(false)
             inputRef.current.value = ''
           }} 
         />
@@ -113,8 +123,8 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
 
       <input
         ref={inputRef}
-        onChange={(e) => getPrediction(e.target.value)}
-        onFocus={(e) => getPrediction(e.target.value)}
+        onChange={(e) => debouncedGetPrediction(e.target.value)}
+        onFocus={(e) => e.stopPropagation()}
       />
 
       {dataArr &&

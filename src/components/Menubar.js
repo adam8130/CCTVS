@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
-import { AppBar, styled, IconButton, useMediaQuery } from "@mui/material";
+import { AppBar, styled, useTheme, useMediaQuery } from "@mui/material";
 import { Menu, Search, DarkMode } from '@mui/icons-material';
 import { AccountCircle, FormatLineSpacing, CloudOff, LocationOff } from '@mui/icons-material';
+import { ButtonWrapper } from "../utils/components/ButtonWrapper";
 import AutoComplete from './AutoComplete';
 
 
 const Menubar = () => {
 
+  const theme = useTheme()
   const isLandscape = useMediaQuery('(orientation: landscape)')
   const [isMenuExtended, setIsMenuExtended] = useState(true)
   const [isInputExtended, setIsInputExtended] = useState(false)
@@ -41,35 +43,36 @@ const Menubar = () => {
               />
               {!isInputExtended && (
                 <>
-                  <IconButtonWrapper 
-                    param={Number(rainningAreaVisible)} 
+                  <ButtonWrapper 
+                    color={theme.palette.menubar.font}
+                    activeTrigger={Number(rainningAreaVisible)}
                     onClick={() => setRainningAreaVisible(!rainningAreaVisible)}
-                  >
-                    <FormatLineSpacing />
-                  </IconButtonWrapper>
-                  <IconButtonWrapper 
-                    param={Number(!rainningCloudVisible)} 
+                    icon={<FormatLineSpacing />}
+                  />
+                  <ButtonWrapper 
+                    color={theme.palette.menubar.font}
+                    activeTrigger={Number(!rainningCloudVisible)}
                     onClick={() => setRainningCloudVisible(!rainningCloudVisible)}
-                  >
-                    <CloudOff />
-                  </IconButtonWrapper>
-                  <IconButtonWrapper 
-                    param={Number(!CCTVMarkersVisible)} 
+                    icon={<CloudOff />}
+                  />
+                  <ButtonWrapper 
+                    color={theme.palette.menubar.font}
+                    activeTrigger={Number(!CCTVMarkersVisible)}
                     onClick={() => setCCTVMarkersVisible(!CCTVMarkersVisible)}
-                  >
-                    <LocationOff />
-                  </IconButtonWrapper>
+                    icon={<LocationOff />}
+                  />
                 </>
               )}
-              <IconButtonWrapper 
-                param={Number(!themeMode)} 
+              <ButtonWrapper 
+                color={theme.palette.menubar.font}
+                activeTrigger={Number(!themeMode)}
                 onClick={() => setThemeMode(!themeMode)}
-              >
-                <DarkMode />
-              </IconButtonWrapper>
+                icon={<DarkMode />}
+              />
             </>
           )}
-          <IconButtonWrapper
+          <ButtonWrapper
+            color={theme.palette.menubar.font} 
             onClick={() => {
               isMenuExtended && setMobileFabsVisible(false)
               setIsMenuExtended((prev) => !prev)
@@ -77,55 +80,57 @@ const Menubar = () => {
               setRainningAreaVisible(false)
               setIsInputExtended(false)
             }}
-          >
-            <Menu />
-          </IconButtonWrapper>
+            icon={<Menu />}
+          />
         </>
         :
         <>
-          <IconButtonWrapper onClick={() => setIsMenuExtended((prev) => !prev)}>
-            <Menu />
-          </IconButtonWrapper>
+          <ButtonWrapper
+            color={theme.palette.menubar.font}
+            onClick={() => setIsMenuExtended((prev) => !prev)}
+            icon={<Menu />}
+          />
           {isMenuExtended && mapTilesLoaded && (
             <>
-              <IconButtonWrapper 
-                param={Number(searchbarVisible)} 
+              <ButtonWrapper 
+                activeTrigger={Number(searchbarVisible)} 
                 onClick={() => setSearchbarVisible(!searchbarVisible)}
               >
                 <Search />
                 {searchbarVisible && (
-                  <div className='popup-bar' onClick={(e) => e.stopPropagation()}>
+                  <div className='popup-bar'>
                     <AutoComplete extend={false}/>
                   </div>
                 )}
-              </IconButtonWrapper>
-              <IconButtonWrapper 
-                param={Number(rainningAreaVisible)} 
+              </ButtonWrapper>
+              <ButtonWrapper 
+                color={theme.palette.menubar.font}
+                activeTrigger={Number(rainningAreaVisible)}
                 onClick={() => setRainningAreaVisible(!rainningAreaVisible)}
-              >
-               <FormatLineSpacing />
-              </IconButtonWrapper>
-              <IconButtonWrapper 
-                param={Number(!rainningCloudVisible)} 
+                icon={<FormatLineSpacing />}
+              />
+              <ButtonWrapper 
+                color={theme.palette.menubar.font}
+                activeTrigger={Number(!rainningCloudVisible)}
                 onClick={() => setRainningCloudVisible(!rainningCloudVisible)}
-              >
-                <CloudOff />
-              </IconButtonWrapper>
-              <IconButtonWrapper 
-                param={Number(!CCTVMarkersVisible)} 
+                icon={<CloudOff />}
+              />
+              <ButtonWrapper 
+                color={theme.palette.menubar.font}
+                activeTrigger={Number(!CCTVMarkersVisible)}
                 onClick={() => setCCTVMarkersVisible(!CCTVMarkersVisible)}
-              >
-                <LocationOff />
-              </IconButtonWrapper>
-              <IconButtonWrapper 
-                param={Number(!themeMode)} 
+                icon={<LocationOff />}
+              />
+              <ButtonWrapper 
+                color={theme.palette.menubar.font}
+                activeTrigger={Number(!themeMode)}
+                icon={<DarkMode />}
                 onClick={() => setThemeMode(!themeMode)}
-              >
-                <DarkMode />
-              </IconButtonWrapper>
-              <IconButtonWrapper>
-                <AccountCircle />
-              </IconButtonWrapper>
+              />
+              <ButtonWrapper
+                color={theme.palette.menubar.font}
+                icon={<AccountCircle />}
+              />
             </>
           )}
         </>
@@ -170,16 +175,12 @@ const RootBox = styled(AppBar)(
     .popup-bar {
       width: 100%;
       position: absolute;
-      left: 130%;
+      left: 135%;
     }
     > .MuiIconButton-root: nth-of-type(2) {
       position: relative;
     }
   `
 );
-
-const IconButtonWrapper = styled(IconButton)(({ param }) => `
-    color: ${param && 'rgb(30,155,255)'};
-`);
 
 export default observer(Menubar)

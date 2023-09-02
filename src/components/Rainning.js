@@ -3,7 +3,7 @@ import { InfoBox } from '@react-google-maps/api'
 import { styled } from '@mui/material'
 import { useStore } from '../store/store'
 import { observer } from 'mobx-react-lite'
-import { isInsideBoundary } from '../utils/isInsideBoundary'
+import { isInsideBoundary } from '../utils/functions/isInsideBoundary'
 
 const Rainning = ({ lat, lon, locationName }) => {
 

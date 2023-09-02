@@ -1,7 +1,7 @@
 import React from 'react'
 import { Fab, styled, useTheme, useMediaQuery } from '@mui/material'
 import { NearMe } from '@mui/icons-material'
-import { getUserCurrentCity } from '../utils/getUserCurrentCity'
+import { getUserCurrentCity } from '../utils/functions/getUserCurrentCity'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../store/store'
 

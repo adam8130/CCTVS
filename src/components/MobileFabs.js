@@ -2,7 +2,7 @@ import React from 'react'
 import { Fab, styled, useTheme } from '@mui/material'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '../store/store'
-import { getUserCurrentCity } from '../utils/getUserCurrentCity'
+import { getUserCurrentCity } from '../utils/functions/getUserCurrentCity'
 import { NearMe } from '@mui/icons-material'
 
 
