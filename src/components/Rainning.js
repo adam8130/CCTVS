@@ -54,7 +54,8 @@ const RootBox = styled('div')(({ zoomed }) => `
     display: flex;
     justify-content: center;
     opacity: 0.8;
-    transform: ${zoomed > 13 && 'scale(2)'};
+    transform: ${zoomed > 12 && 'scale(2.2)'};
+    transition: all 0.3s;
         &::before {
             content: '';
             position: absolute;
@@ -66,24 +67,24 @@ const RootBox = styled('div')(({ zoomed }) => `
             left: 10px;
             box-shadow: 12px -2px 0 3px gray;
         }
-        div {
+        .rain {
             position: relative;
             display: flex;
             span {
-                width: 2px;
-                height: 2px;
-                border-radius: 50%;
-                background: gray;
-                margin: 0 1px;
-                position: relative;
-                bottom: -10px;
-                animation: rain 5s linear infinite;
-                animation-duration: calc(15s / var(--i))};
+              width: 2px;
+              height: 2px;
+              border-radius: 50%;
+              background: gray;
+              margin: 0 1px;
+              position: relative;
+              bottom: -15px;
+              animation: rain 5s linear infinite;
+              animation-duration: calc(15s / var(--i))};
             }
             p {
-                position: absolute;
-                top: -10px;
-                color: rgba(220,220,220,0.9);
+              position: absolute;
+              top: -10px;
+              color: rgba(220,220,220,0.9);
             }
         }
         @keyframes rain {
