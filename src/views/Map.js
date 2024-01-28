@@ -9,7 +9,7 @@ import axios from "axios";
 import RainningArea from "../components/RainningArea";
 
 
-const Map = (props) => {
+function Map(props) {
 
   // 定義變量
   const [CCTVSData, setCCTVSData] = useState([]);
@@ -17,7 +17,7 @@ const Map = (props) => {
   const [rainningAreaArr, setRainningAreaArr] = useState([]);
   const [popupInfo, setPopupInfo] = useState(null);
   const { map, selectedCityName, selectedCCTVID, searchData, serverURL, userPosition, CCTVMarkersVisible } = useStore();
-  const { themeMode, mapTilesLoaded, rainningCloudVisible, rainningAreaVisible,disabledViewportExtend } = useStore();
+  const { themeMode, mapTilesLoaded, rainningCloudVisible, rainningAreaVisible, disabledViewportExtend } = useStore();
   const { setVideoURL, setVideoName, setMapTilesLoaded, setUserPosition } = useStore();
   const { setSelectedCCTVID, setMap, setCurrentMapZoomedLevel, setCurrentMapBounds } = useStore();
 
@@ -37,24 +37,25 @@ const Map = (props) => {
 
   // 取得天氣資料
   useEffect(() => {
-    axios(`https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=${process.env.REACT_APP_WEATHER_KEY}&elementName=Weather&parameterName=CITY`)
+    axios(`https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0001-001?Authorization=${process.env.REACT_APP_WEATHER_KEY}&elementName=Weather&parameterName=CITY`)
       .then(res => {
         let rainningArr = []
         let rainningAreaArr = []
-        res.data.records.location.forEach(item => {
-          if (item.weatherElement[0].elementValue.includes('雨')) {
+        console.log(res)
+        res.data.records.Station.forEach(item => {
+          if (item.WeatherElement.Weather.includes('雨')) {
             rainningArr.push({
-              locationName: item.locationName,
-              lat: item.lat,
-              lon: item.lon,
-              weather: item.weatherElement[0].elementValue
+              locationName: item.StationName,
+              lat: item.GeoInfo.Coordinates[0].StationLatitude,
+              lon: item.GeoInfo.Coordinates[0].StationLongitude,
+              weather: item.WeatherElement.Weather
             })
           }
           if (
-            item.weatherElement[0].elementValue.includes('雨') && 
-            !rainningAreaArr.includes(item.parameter[0].parameterValue)
+            item.WeatherElement.Weather.includes('雨') && 
+            !rainningAreaArr.includes(item.StationName)
           ) {
-            rainningAreaArr.push(item.parameter[0].parameterValue)
+            rainningAreaArr.push(item.StationName)
           }
         })
         setRainningAreaArr(rainningAreaArr);

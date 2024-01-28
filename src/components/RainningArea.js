@@ -7,10 +7,11 @@ import { observer } from 'mobx-react-lite';
 const Root = styled('div')(
   ({ mobile, landscape, theme }) => `
     width: ${mobile ? '140px' : '170px'};
-    height: max-content;
+    max-height: 350px;
     padding: ${mobile ? '5px' : '5px 0 5px 10px'};
     border-radius: 10px;
     position: fixed;
+    overflow-y: scroll;
     top: ${
       mobile && landscape ? '10px':
       mobile ? '20%' : '10px'
@@ -35,6 +36,7 @@ const Root = styled('div')(
     div {
       width: ${!mobile && '90%'};
       display: flex;
+      flex-direction: column;
       flex-wrap: wrap;
       gap: ${!mobile && '10px'};
       margin: 0 auto 5px auto;
