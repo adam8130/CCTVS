@@ -68,7 +68,7 @@ const App = () => {
 const RootBox = styled('div')(({ ismobile, islandscape }) => `
   position: relative;
   width: 100vw;
-  height: ${ismobile? (islandscape? '80vh': '89vh') : '100vh'};
+  height: 100vh;
   overflow: hidden;
 `)
 

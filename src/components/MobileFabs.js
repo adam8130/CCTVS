@@ -64,7 +64,7 @@ const RootBox = styled('div')`
   width: 90%;
   z-index: 100;
   position: fixed;
-  top: 13%;
+  top: 12%;
   left: 5%;
   display: flex;
   justify-content: center;

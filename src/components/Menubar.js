@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { AppBar, styled, useTheme, useMediaQuery } from "@mui/material";
 import { Menu, Search, DarkMode } from '@mui/icons-material';
-import { AccountCircle, FormatLineSpacing, CloudOff, LocationOff } from '@mui/icons-material';
+import { FormatLineSpacing, CloudOff, LocationOff } from '@mui/icons-material';
 import { ButtonWrapper } from "../utils/components/ButtonWrapper";
 import AutoComplete from './AutoComplete';
 
@@ -127,10 +127,6 @@ const Menubar = () => {
                 icon={<DarkMode />}
                 onClick={() => setThemeMode(!themeMode)}
               />
-              <ButtonWrapper
-                color={theme.palette.menubar.font}
-                icon={<AccountCircle />}
-              />
             </>
           )}
         </>
@@ -163,8 +159,8 @@ const RootBox = styled(AppBar)(
     align-items: center;
 
     position: fixed;
-    top: ${mobile && !landscape ? '3%' : '10px'};
-    left: ${mobile && !landscape ? 'unset' : '15px'};
+    top: ${mobile && !landscape ? '2%' : '15px'};
+    left: ${mobile && !landscape ? 'unset' : '30px'};
     right: ${mobile && !landscape ? '10px' : 'unset'};
     bottom: ${mobile && !landscape ? 'unset' : 'unset'};
 

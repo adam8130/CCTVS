@@ -76,8 +76,8 @@ export default observer(Fabs)
 const RootBox = styled('div')`
   z-index: 100;
   position: fixed;
-  top: 10px;
-  right: 15px;
+  top: 15px;
+  right: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;

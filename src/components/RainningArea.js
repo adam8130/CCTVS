@@ -14,13 +14,13 @@ const Root = styled('div')(
     overflow-y: scroll;
     top: ${
       mobile && landscape ? '10px':
-      mobile ? '20%' : '10px'
+      mobile ? '20%' : '15px'
     };
     left: ${
-      mobile && landscape ? '10%':
-      mobile && !landscape ? '3%' : '7%'
+      mobile && landscape ? '11%':
+      mobile && !landscape ? '3%' : '100px'
     };
-    background: rgba(255, 255, 255, 0.5);
+    background: ${theme.palette.menubar.main};
     transition: all 0.3s;
     section {
       padding-left: 15px;
