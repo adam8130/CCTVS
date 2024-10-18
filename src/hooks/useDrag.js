@@ -7,6 +7,7 @@ const useDrag = (id) => {
   const isClicked = useRef(false);
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const diff = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
 
@@ -17,19 +18,25 @@ const useDrag = (id) => {
     if (!container) throw new Error("target element must have a parent")
 
     const onMouseDown = (e) => {
-      // 實現點擊位置在元素寬高的80%內, 才觸發
+      const { left, top } = e.target.getBoundingClientRect()
+     
       const width = target.clientWidth
       const height = target.clientHeight
-      const { left, top } = e.target.getBoundingClientRect()
-      const event = isMobile ? e.changedTouches[0] : e
 
+      const event = isMobile ? e.changedTouches[0] : e
+      
       if (
+        // 實現點擊位置在元素寬高的0%內, 才觸發
         event.clientX > (left + width * 0.2) && event.clientX < (left + width * 0.8) &&
         event.clientY > (top + height * 0.2) && event.clientY < (top + height * 0.8)
       ) {
-        isClicked.current = true;
         e.preventDefault()
         e.stopPropagation()
+        isClicked.current = true;
+        diff.current = {
+          x: event.clientX - target.offsetLeft,
+          y: event.clientY - target.offsetTop
+        }
       }
     }
 
@@ -42,8 +49,8 @@ const useDrag = (id) => {
       e.preventDefault()
       const event = isMobile ? e.changedTouches[0] : e
       if (isClicked.current) {
-        target.style.top = `${event.clientY - target.offsetHeight / 2}px`
-        target.style.left = `${event.clientX - target.offsetWidth / 2}px`
+        target.style.top = `${event.clientY - diff.current.y}px`
+        target.style.left = `${event.clientX - diff.current.x}px`
       }
     }
     
