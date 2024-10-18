@@ -164,7 +164,7 @@ const RootBox = styled(AppBar)(
 
     position: fixed;
     top: ${mobile && !landscape ? '3%' : '10px'};
-    left: ${mobile && !landscape ? 'unset' : '10px'};
+    left: ${mobile && !landscape ? 'unset' : '15px'};
     right: ${mobile && !landscape ? '10px' : 'unset'};
     bottom: ${mobile && !landscape ? 'unset' : 'unset'};
 

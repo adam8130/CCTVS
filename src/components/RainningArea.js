@@ -26,6 +26,7 @@ const Root = styled('div')(
       padding-left: 15px;
       display: flex;
       align-items: center;
+      cursor: pointer;
       h3 {
         font-size: 16px;
         color: ${theme.palette.menubar.font};
@@ -58,10 +59,10 @@ function RainningArea({ list }) {
 
   return (
     <Root mobile={Number(isMobile)} landscape={Number(isLandscape)}>
-      <section>
+      <section onClick={() => setExpanded(prev => !prev)}>
         <h3>目前降雨地區</h3>
         {!isMobile && (
-          <IconButton onClick={() => setExpanded(prev => !prev)}>
+          <IconButton>
             <ExpandMore />
           </IconButton>
         )}

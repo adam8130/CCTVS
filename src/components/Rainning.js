@@ -83,7 +83,6 @@ const RootBox = styled('div')(({ zoomed }) => `
             }
             p {
               position: absolute;
-              top: -10px;
               color: rgba(220,220,220,0.9);
             }
         }
