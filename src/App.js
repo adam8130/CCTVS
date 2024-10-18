@@ -52,9 +52,6 @@ const App = () => {
       setType('img')
     }
   }, [selectedCityName, videoURL])
-
-  console.log(videoURL)
-  console.log(selectedCityName)
   
   return (
     <ThemeProvider theme={currentTheme}>

@@ -6,7 +6,6 @@ export const getUserCurrentCity = async (position) => {
   const json = await fetch(apiUrl);
   const data = await json.json();
   const compound_code = data.plus_code.compound_code;
-  console.log(data)
 
   return compound_code;
 }

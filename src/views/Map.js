@@ -41,7 +41,7 @@ function Map(props) {
       .then(res => {
         let rainningArr = []
         let rainningAreaArr = []
-        console.log(res)
+
         res.data.records.Station.forEach(item => {
           if (item.WeatherElement.Weather.includes('雨')) {
             rainningArr.push({

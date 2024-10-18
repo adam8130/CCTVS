@@ -94,7 +94,6 @@ class Store {
     if (act === null) {
       this.videoRef && ( this.videoRef.current.src = null )
       this.videoURL = act
-      console.log('connection down')
     } 
     this.videoURL = act
   }

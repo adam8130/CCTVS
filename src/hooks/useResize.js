@@ -39,7 +39,6 @@ const useResize = (id) => {
                 target.style.left = `${event.clientX - x - (target.offsetWidth / 2)}px`
                 parent.style.height = `${event.clientY - y - (target.offsetHeight - (isMobile ? 20 : 5))}px`
                 parent.style.width = `${event.clientX - x + (target.offsetWidth / 2)}px`
-                console.log(parent.style.height)
             }
         }
 

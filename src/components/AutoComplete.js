@@ -51,7 +51,6 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
         sessionToken
       }
       service.getQueryPredictions(queryOption, (prediction) => {
-        console.log(prediction)
         prediction && setDataArr(prediction)
       })
     } else {
@@ -60,7 +59,6 @@ const AutoComplete = ({ extend, maxwidth, minwidth, extended }) => {
   }, 500)
 
   const getResponse = (item) => {
-    console.log(item)
     let request = {
       query: item?.description || inputRef.current.value,
       language: 'zh-TW',
