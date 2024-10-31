@@ -70,7 +70,8 @@ const App = () => {
 const RootBox = styled('div')(({ ismobile, islandscape }) => `
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: 100vh;  
+  height: 100svh;
   overflow: hidden;
 `)
 
