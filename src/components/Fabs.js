@@ -96,6 +96,10 @@ const MenuBox = styled('div')(({fabsMenuVisible, theme}) => `
   font-weight: 700;
   background: ${theme.palette.menubar.main};
   color: ${fabsMenuVisible? 'rgb(30,155,255)' : theme.palette.menubar.font};
+  box-shadow: 
+    0px 2px 4px -1px rgba(0, 0, 0, 0.2), 
+    0px 2px 4px 0px rgba(0, 0, 0, 0.14), 
+    0px 1px 8px 0px rgba(0, 0, 0, 0.12);
 `)
 
 const FabGroup = styled('div')(({ismobile, islandscape}) => `

@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { AppBar, styled, useTheme, useMediaQuery } from "@mui/material";
 import { Menu, Search, DarkMode } from '@mui/icons-material';
-import { FormatLineSpacing, CloudOff, LocationOff } from '@mui/icons-material';
+import { EventNote, CloudOff, LocationOff } from '@mui/icons-material';
 import { ButtonWrapper } from "../utils/components/ButtonWrapper";
 import AutoComplete from './AutoComplete';
 
@@ -47,7 +47,7 @@ const Menubar = () => {
                     color={theme.palette.menubar.font}
                     activeTrigger={Number(rainningAreaVisible)}
                     onClick={() => setRainningAreaVisible(!rainningAreaVisible)}
-                    icon={<FormatLineSpacing />}
+                    icon={<EventNote />}
                   />
                   <ButtonWrapper 
                     color={theme.palette.menubar.font}
@@ -107,7 +107,7 @@ const Menubar = () => {
                 color={theme.palette.menubar.font}
                 activeTrigger={Number(rainningAreaVisible)}
                 onClick={() => setRainningAreaVisible(!rainningAreaVisible)}
-                icon={<FormatLineSpacing />}
+                icon={<EventNote />}
               />
               <ButtonWrapper 
                 color={theme.palette.menubar.font}

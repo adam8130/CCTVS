@@ -172,6 +172,7 @@ const RootBox = styled('div')(({ theme, maxwidth, minwidth, focused, extend }) =
       border: none;
       background: ${theme.palette.inputbar.input};
       color: ${theme.palette.inputbar.font};
+      outline: none;
     }
     svg {
       position: absolute;

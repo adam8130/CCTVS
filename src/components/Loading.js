@@ -1,21 +1,23 @@
 import { styled } from "@mui/material";
+import { useStore } from "../store/store";
+import { observer } from "mobx-react-lite";
 
-const Root = styled("div")`
+const Root = styled("div")(({ ismobile }) => `
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(230, 230, 230);
-  z-index: 100;
+  background: rgba(0, 0, 0);
+  z-index: 3000;
   display: flex;
   justify-content: center;
   align-items: center;
   span {
-    color: black;
+    color: rgba(255, 255, 255, 0.75);
     font-size: 40px;
     display: inline-block;
-    margin: 0 5px;
+    margin: ${ismobile ? '0 5px' : '0 10px'};
     animation: bounce 0.6s infinite alternate;
     &:nth-of-type(1) {
       animation-delay: 0.1s;
@@ -57,11 +59,13 @@ const Root = styled("div")`
       transform: translateY(-10px);
     }
   }
-`;
+`);
 
-export default function Loading() {
+function Loading() {
+  const { isMobile } = useStore(); 
+
   return (
-    <Root>
+    <Root ismobile={Number(isMobile)}>
       <span>L</span>
       <span>o</span>
       <span>a</span>
@@ -75,3 +79,5 @@ export default function Loading() {
     </Root>
   );
 }
+
+export default observer(Loading)

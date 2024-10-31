@@ -9,6 +9,7 @@ import Fabs from "./components/Fabs.js"
 import { useStore } from "./store/store.js"
 import MediaCam from "./components/MediaCam.js"
 import MobileFabs from "./components/MobileFabs.js"
+import Loading from "./components/Loading.js"
 
 
 const libraries = ['places']
@@ -16,7 +17,7 @@ const libraries = ['places']
 const App = () => {
   
   const [ type, setType ] = useState(null)
-  const { videoURL, themeMode, selectedCityName, setIsMobile, setServerURL } = useStore()
+  const { videoURL, themeMode, selectedCityName, mapTilesLoaded, setIsMobile, setServerURL } = useStore()
 
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
@@ -60,6 +61,7 @@ const App = () => {
         { videoURL && <MediaCam type={type}/> }
         { isLoaded && <Menubar/> }
         { isMobile && !isLandscape? <MobileFabs/> : <Fabs/> }
+        { !mapTilesLoaded && <Loading /> }
       </RootBox>
     </ThemeProvider>
   )

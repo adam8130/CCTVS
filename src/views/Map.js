@@ -4,7 +4,6 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { dark } from "../theme/darkMap"
 import Rainning from "../components/Rainning";
-import Loading from "../components/Loading";
 import axios from "axios";
 import RainningArea from "../components/RainningArea";
 
@@ -17,7 +16,7 @@ function Map(props) {
   const [rainningAreaArr, setRainningAreaArr] = useState([]);
   const [popupInfo, setPopupInfo] = useState(null);
   const { map, selectedCityName, selectedCCTVID, searchData, serverURL, userPosition, CCTVMarkersVisible } = useStore();
-  const { themeMode, mapTilesLoaded, rainningCloudVisible, rainningAreaVisible, disabledViewportExtend } = useStore();
+  const { themeMode, rainningCloudVisible, rainningAreaVisible, disabledViewportExtend } = useStore();
   const { setVideoURL, setVideoName, setMapTilesLoaded, setUserPosition } = useStore();
   const { setSelectedCCTVID, setMap, setCurrentMapZoomedLevel, setCurrentMapBounds } = useStore();
 
@@ -131,7 +130,6 @@ function Map(props) {
       onBoundsChanged={() => setCurrentMapBounds(map.getBounds())}
       onTilesLoaded={() => setMapTilesLoaded(true)}
     >
-      {!mapTilesLoaded && <Loading />}
       {CCTVMarkersVisible && 
         CCTVSData?.map(item =>
           <Marker
