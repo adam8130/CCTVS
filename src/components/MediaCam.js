@@ -7,6 +7,7 @@ import MeidaLoadingMask from "./MeidaLoadingMask";
 import useDrag from '../hooks/useDrag'
 import useResize from "../hooks/useResize";
 import Hls from 'hls.js'
+import flvjs from 'flv.js'
 import axios from "axios";
 
 
@@ -50,13 +51,34 @@ const MediaCam = ({ type }) => {
   // 處理.m3u8
   useEffect(() => {
     let hlsPlayer
-    if (type !== 'img' && selectedCityName === 'YilanCounty') {
+    if (type === 'video' && selectedCityName === 'YilanCounty') {
       hlsPlayer = new Hls()
       hlsPlayer.loadSource(videoURL)
       hlsPlayer.attachMedia(ref.current)
     }
+
     return () => {
-      type !== 'img' && selectedCityName === 'YilanCounty' && hlsPlayer.destroy()
+      type === 'video' && selectedCityName === 'YilanCounty' && hlsPlayer.destroy()
+    }
+  }, [type, videoURL, ref, selectedCityName])
+
+  // 處理flv
+  useEffect(() => {
+    let flvPlayer
+    if (type === 'video' && selectedCityName === 'NewTaipei') {
+      flvPlayer = flvjs.createPlayer({
+        type: 'flv',
+        url: videoURL,
+        isLive: true, // 直播流一定要加
+      })
+
+      flvPlayer.attachMediaElement(ref.current)
+      flvPlayer.load()
+      flvPlayer.play()
+    }
+
+    return () => {
+      type === 'video' && selectedCityName === 'NewTaipei' && flvPlayer.destroy()
     }
   }, [type, videoURL, ref, selectedCityName])
 

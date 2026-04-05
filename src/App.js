@@ -46,7 +46,7 @@ const App = () => {
     else if (['Taipei', 'PingtungCounty', 'YunlinCounty'].includes(selectedCityName)) {
       setType('iframe')
     }
-    else if (['YilanCounty'].includes(selectedCityName)) {
+    else if (['YilanCounty', 'NewTaipei'].includes(selectedCityName)) {
       setType('video')
     }
     else {
